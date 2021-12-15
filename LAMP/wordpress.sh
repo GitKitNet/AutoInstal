@@ -1,9 +1,10 @@
-wordpress.sh
 #!/bin/bash
 
-#####################################################
-#Script to confiruge Server, WebServer and WordPress#
-#####################################################
+
+# ====================================== #
+#     Confiruge Server and WordPress     #
+# ====================================== #
+
 
 ## -------------------------------------
 ##      VARIABLE & Function
@@ -11,38 +12,19 @@ wordpress.sh
 function OSrelease {
   OS="$(cat /etc/*release |grep '^ID=' |sed 's/"//g' |awk -F= '{print $2 }' )";
   release="$(cat /etc/*release |grep '^VERSION_ID=' |sed  's/"//g' |awk -F= '{print $2 }' )";
-}; OSRelease
+}; OSRel
 
-function wait {
-  echo -en "\n\tress [ANY] key to continue..."
-  read -s -n 1;
-}
+function wait() { echo -en "\n\tress [ANY] key to continue..." && read -s -n 1; }
+function pause() { echo -en "\n\tPress [ENTER] key to continue..." && read fackEnterKey; }
+function title { clear && echo "${title}" && wait; }
 
-function pause() {
-  echo -en "\n\tPress [ENTER] key to continue..."
-  read fackEnterKey
-}
-
-function title {
-  clear;
-  echo "${title}";
-  wait;
-}
-
-function myip {
-  IPETH="$(ip addr show eth0 |grep inet |awk '{ print $2; }' |sed 's/\/.*$//' | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}' )";
-  IPWEB="$(echo $(curl -4 icanhazip.com))";
-  IPHOST=$(hostname -I|cut -f1 -d ' ');
-  ## -------
-  if [ "$IPETH" == "$IPWEB" ]; then
-    myip="$IPETH";
-  else
-    if [ "$IPHOST" == "$IPWEB" ]; then
-      myip="$IPHOST";
-    else
-      myip="$IPWEB";
-    fi
-  fi
+function myip()
+{
+ipE="$(ip addr show eth0 |grep inet |awk '{ print $2; }' |sed 's/\/.*$//' | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}' )";
+ipW="$(echo $(curl -4 icanhazip.com))";
+ipH=$(hostname -I|cut -f1 -d ' ');
+if [ "$ipE" == "$ipW" ]; then myip="$ipE";
+else if [ "$ipH" == "$ipW" ]; then myip="$ipH"; else myip="$ipW"; fi; fi
 }
 
 function TIMER()

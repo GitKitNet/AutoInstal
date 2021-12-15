@@ -42,9 +42,10 @@ function DATA() { DATA=$(date +%Y-%m-%d_%k%M%S) && echo "$DATA"; }
 function APT_INSTALL() {
 APTGET=$(dpkg-query -W -f='${Status}' $1 2>/dev/null | grep -c "ok installed")
   if [ "${APTGET}" -eq 0 ]; then
-    echo -en "${YELLOW}Installing $1 ${NC}" && apt-get install $1 --yes;
+    echo -en "${YELLOW}\nInstalling $1 ${NC}\n";
+    apt-get install $1 --yes;
     elif [ "${APTGET}" -eq 1 ]; then
-      echo -en "${GREEN} $1 is installed!${NC}"
+      echo -en "\n${GREEN} $1 is installed!${NC}\n"
   fi
 }
 

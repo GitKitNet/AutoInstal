@@ -45,16 +45,17 @@ function myip {
   fi
 }
 
-function TIMER() {
-  INF="Wait: "
-  T=&1 && if [ -z "$1" ];then T=5; fi
-  CON='\033[0K\r'
-  secs="$((1 * ${T}))"
-  while [ $secs -gt 0 ]; do
-    echo -ne " ${INF}\t $secs${CON}" && sleep 1
-    : $((secs--))
-  done
+function TIMER()
+{
+if [[ "$1" =~ ^[[:digit:]]+$ ]]; then
+ T="$1"; 
+else 
+  if [ -z "$1" ]; then T="3"; fi;
+fi;
+secs="$((1 * ${T}))";
+while [ $secs -gt 0 ]; do echo -ne "\t $secs\033[0K\r"; sleep 1 && : $((secs--)); done; 
 }
+
 
 function DATA() {
   DATA=$(date +%Y-%m-%d_%k%M%S)

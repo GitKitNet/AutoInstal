@@ -6,9 +6,10 @@
 # ====================================== #
 
 
-## -------------------------------------
-##      VARIABLE & Function
-## -------------------------------------
+# -------------------------------------
+#      VARIABLE & Function
+# -------------------------------------
+
 function OSrelease {
   OS="$(cat /etc/*release |grep '^ID=' |sed 's/"//g' |awk -F= '{print $2 }' )";
   release="$(cat /etc/*release |grep '^VERSION_ID=' |sed  's/"//g' |awk -F= '{print $2 }' )";
@@ -27,22 +28,8 @@ if [ "$ipE" == "$ipW" ]; then myip="$ipE";
 else if [ "$ipH" == "$ipW" ]; then myip="$ipH"; else myip="$ipW"; fi; fi
 }
 
-function TIMER()
-{
-if [[ "$1" =~ ^[[:digit:]]+$ ]]; then
- T="$1"; 
-else 
-  if [ -z "$1" ]; then T="3"; fi;
-fi;
-secs="$((1 * ${T}))";
-while [ $secs -gt 0 ]; do echo -ne "\t $secs\033[0K\r"; sleep 1 && : $((secs--)); done; 
-}
-
-
-function DATA() {
-  DATA=$(date +%Y-%m-%d_%k%M%S)
-  echo "$DATA"
-}
+function TIMER() { if [[ "$1" =~ ^[[:digit:]]+$ ]]; then T="$1"; else T="3"; fi; SE="$((1 * ${T}))" && SC='\033[0K\r'; while [ $SE -gt 0 ]; do echo -ne "\t $SE$SC"; sleep 1 && : $((SE--)); done; }
+function DATA() { DATA=$(date +%Y-%m-%d_%k%M%S) && echo "$DATA"; }
 
 ## -------------------------------------
 ##      Colors settings
@@ -55,18 +42,10 @@ PURPLE='\033[0;4;35m'           # PURPLE
 CYAN='\033[4;36m'               # CYAN
 NC='\033[0m'                    # No Color
 
-
-
-## ======================================
-##  WordPress & LAMP stack installation
-## ======================================
-function START_WORDPRESS_LAMP {
-
-# Welcome message
+#Welcome message
 clear
-echo -en "${BLUE}Welcome to WordPress & LAMP stack installation and configuration wizard! ${NC}
-\t\t ${GREEN}First of all, we going to check all required packeges... ${NC}"
-
+echo -e "Welcome to WordPress & LAMP stack installation and configuration wizard!
+First of all, we going to check all required packeges..."
 
 #Checking packages
 echo -e "${YELLOW}Checking packages...${NC}"
@@ -74,110 +53,143 @@ echo -e "List of required packeges: nano, zip, unzip, mc, htop, fail2ban, apache
 
 read -r -p "Do you want to check packeges? [y/N] " response
 case $response in
-    [yY][eE][sS]|[yY])
+    [yY][eE][sS]|[yY]) 
 
 
 NANO=$(dpkg-query -W -f='${Status}' nano 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' nano 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
-    echo -e "${YELLOW}Installing nano${NC}" && apt-get install nano --yes;
-    elif [ $(dpkg-query -W -f='${Status}' nano 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
+  if [ $(dpkg-query -W -f='${Status}' nano 2>/dev/null | grep -c "ok installed") -eq 0 ];
+  then
+    echo -e "${YELLOW}Installing nano${NC}"
+    apt-get install nano --yes;
+    elif [ $(dpkg-query -W -f='${Status}' nano 2>/dev/null | grep -c "ok installed") -eq 1 ];
+    then
       echo -e "${GREEN}nano is installed!${NC}"
   fi
 
 ZIP=$(dpkg-query -W -f='${Status}' zip 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' zip 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
-    echo -e "${YELLOW}Installing zip${NC}" && apt-get install zip --yes;
-    elif [ $(dpkg-query -W -f='${Status}' zip 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
+  if [ $(dpkg-query -W -f='${Status}' zip 2>/dev/null | grep -c "ok installed") -eq 0 ];
+  then
+    echo -e "${YELLOW}Installing zip${NC}"
+    apt-get install zip --yes;
+    elif [ $(dpkg-query -W -f='${Status}' zip 2>/dev/null | grep -c "ok installed") -eq 1 ];
+    then
       echo -e "${GREEN}zip is installed!${NC}"
   fi
 
 MC=$(dpkg-query -W -f='${Status}' mc 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' mc 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
-    echo -e "${YELLOW}Installing mc${NC}" && apt-get install mc --yes;
-    elif [ $(dpkg-query -W -f='${Status}' mc 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
+  if [ $(dpkg-query -W -f='${Status}' mc 2>/dev/null | grep -c "ok installed") -eq 0 ];
+  then
+    echo -e "${YELLOW}Installing mc${NC}"
+    apt-get install mc --yes;
+    elif [ $(dpkg-query -W -f='${Status}' mc 2>/dev/null | grep -c "ok installed") -eq 1 ];
+    then
       echo -e "${GREEN}mc is installed!${NC}"
   fi
 
 HTOP=$(dpkg-query -W -f='${Status}' htop 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' htop 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
-    echo -e "${YELLOW}Installing htop${NC}" && apt-get install htop --yes;
-    elif [ $(dpkg-query -W -f='${Status}' htop 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
+  if [ $(dpkg-query -W -f='${Status}' htop 2>/dev/null | grep -c "ok installed") -eq 0 ];
+  then
+    echo -e "${YELLOW}Installing htop${NC}"
+    apt-get install htop --yes;
+    elif [ $(dpkg-query -W -f='${Status}' htop 2>/dev/null | grep -c "ok installed") -eq 1 ];
+    then
       echo -e "${GREEN}htop is installed!${NC}"
   fi
 
 FAIL2BAN=$(dpkg-query -W -f='${Status}' fail2ban 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' fail2ban 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
-    echo -e "${YELLOW}Installing fail2ban${NC}" && apt-get install fail2ban --yes;
-    elif [ $(dpkg-query -W -f='${Status}' fail2ban 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
+  if [ $(dpkg-query -W -f='${Status}' fail2ban 2>/dev/null | grep -c "ok installed") -eq 0 ];
+  then
+    echo -e "${YELLOW}Installing fail2ban${NC}"
+    apt-get install fail2ban --yes;
+    elif [ $(dpkg-query -W -f='${Status}' fail2ban 2>/dev/null | grep -c "ok installed") -eq 1 ];
+    then
       echo -e "${GREEN}fail2ban is installed!${NC}"
   fi
 
 APACHE2=$(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
-    echo -e "${YELLOW}Installing apache2${NC}" && apt-get install apache2 php5 --yes;
-    elif [ $(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
+  if [ $(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok installed") -eq 0 ];
+  then
+    echo -e "${YELLOW}Installing apache2${NC}"
+    apt-get install apache2 php5 --yes;
+    elif [ $(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok installed") -eq 1 ];
+    then
       echo -e "${GREEN}apache2 is installed!${NC}"
   fi
 
 MYSQL=$(dpkg-query -W -f='${Status}' mysql-server 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' mysql-server 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
-    echo -e "${YELLOW}Installing mysql-server${NC}" && apt-get install mysql-server --yes;
-    elif [ $(dpkg-query -W -f='${Status}' mysql-server 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
+  if [ $(dpkg-query -W -f='${Status}' mysql-server 2>/dev/null | grep -c "ok installed") -eq 0 ];
+  then
+    echo -e "${YELLOW}Installing mysql-server${NC}"
+    apt-get install mysql-server --yes;
+    elif [ $(dpkg-query -W -f='${Status}' mysql-server 2>/dev/null | grep -c "ok installed") -eq 1 ];
+    then
       echo -e "${GREEN}mysql-server is installed!${NC}"
   fi
 
 PHP5CURL=$(dpkg-query -W -f='${Status}' php5-curl 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' php5-curl 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
-    echo -e "${YELLOW}Installing php5-curl${NC}" && apt-get install php5-curl --yes;
-    elif [ $(dpkg-query -W -f='${Status}' php5-curl 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
+  if [ $(dpkg-query -W -f='${Status}' php5-curl 2>/dev/null | grep -c "ok installed") -eq 0 ];
+  then
+    echo -e "${YELLOW}Installing php5-curl${NC}"
+    apt-get install php5-curl --yes;
+    elif [ $(dpkg-query -W -f='${Status}' php5-curl 2>/dev/null | grep -c "ok installed") -eq 1 ];
+    then
       echo -e "${GREEN}php5-curl is installed!${NC}"
   fi
 
 PHPMYADMIN=$(dpkg-query -W -f='${Status}' phpmyadmin 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' phpmyadmin 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
-    echo -e "${YELLOW}Installing phpmyadmin${NC}" && apt-get install phpmyadmin --yes;
-    elif [ $(dpkg-query -W -f='${Status}' phpmyadmin 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
+  if [ $(dpkg-query -W -f='${Status}' phpmyadmin 2>/dev/null | grep -c "ok installed") -eq 0 ];
+  then
+    echo -e "${YELLOW}Installing phpmyadmin${NC}"
+    apt-get install phpmyadmin --yes;
+    elif [ $(dpkg-query -W -f='${Status}' phpmyadmin 2>/dev/null | grep -c "ok installed") -eq 1 ];
+    then
       echo -e "${GREEN}phpmyadmin is installed!${NC}"
   fi
 
 WGET=$(dpkg-query -W -f='${Status}' wget 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' wget 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
-    echo -e "${YELLOW}Installing wget${NC}" && apt-get install wget --yes;
-    elif [ $(dpkg-query -W -f='${Status}' wget 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
+  if [ $(dpkg-query -W -f='${Status}' wget 2>/dev/null | grep -c "ok installed") -eq 0 ];
+  then
+    echo -e "${YELLOW}Installing wget${NC}"
+    apt-get install wget --yes;
+    elif [ $(dpkg-query -W -f='${Status}' wget 2>/dev/null | grep -c "ok installed") -eq 1 ];
+    then
       echo -e "${GREEN}wget is installed!${NC}"
   fi
 
 CURL=$(dpkg-query -W -f='${Status}' curl 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' curl 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
-    echo -e "${YELLOW}Installing curl${NC}" && apt-get install curl --yes;
-    elif [ $(dpkg-query -W -f='${Status}' curl 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
+  if [ $(dpkg-query -W -f='${Status}' curl 2>/dev/null | grep -c "ok installed") -eq 0 ];
+  then
+    echo -e "${YELLOW}Installing curl${NC}"
+    apt-get install curl --yes;
+    elif [ $(dpkg-query -W -f='${Status}' curl 2>/dev/null | grep -c "ok installed") -eq 1 ];
+    then
       echo -e "${GREEN}curl is installed!${NC}"
   fi
-;;
+
+  ;;
 
     *)
-  echo -en "${PURPLE}\n Packeges check is ignored!
-  ${YELLOW}\t Please be aware, that apache2, mysql, phpmyadmin and other software may not be installed!${NC}"
-  TIMER
-;;
+
+  echo -e "${RED}
+  Packeges check is ignored! 
+  Please be aware, that apache2, mysql, phpmyadmin and other software may not be installed!
+  ${NC}"
+
+  ;;
 esac
 
 
-## ========================================
-##     phpmyadmin default path change
-## ========================================
-
+#phpmyadmin default path change
 echo -e "${YELLOW}Changing phpMyAdmin default path from /phpMyAdmin to /myadminphp...${NC}"
+
 read -r -p "Do you want to change default phpMyAdmin path to /myadminphp? [y/N] " response
 case $response in
-    [yY][eE][sS]|[yY])
+    [yY][eE][sS]|[yY]) 
+  
+cat >/etc/phpmyadmin/apache.conf <<EOL
+# phpMyAdmin default Apache configuration
 
-## -------------------------
-AphpMyAdmin='phpmyadmin'
-cat > /etc/phpmyadmin/apache.conf <<EOL
-## phpMyAdmin default Apache configuration
-
-Alias /${AphpMyAdmin} /usr/share/phpmyadmin
+Alias /myadminphp /usr/share/phpmyadmin
 
 <Directory /usr/share/phpmyadmin>
     Options FollowSymLinks
@@ -202,8 +214,7 @@ Alias /${AphpMyAdmin} /usr/share/phpmyadmin
 
 </Directory>
 
-
-## Authorize for setup
+# Authorize for setup
 <Directory /usr/share/phpmyadmin/setup>
     <IfModule mod_authz_core.c>
         <IfModule mod_authn_file.c>
@@ -224,45 +235,41 @@ Alias /${AphpMyAdmin} /usr/share/phpmyadmin
 </Directory>
 EOL
 
-echo -e "${GREEN} Path was succesfully changed! ${NC}
-${BLUE} New phpMyAdmin path is: $(myip)/${AphpMyAdmin} (i.e.: yourwebsite.com/myadminphp) ${NC}"
-TIMER 3
-;;
-    *) echo -e "${RED} Path was not changed! ${NC}"
-  TIMER
-;;
+echo -e "${GREEN}Path was succesfully changed!
+New phpMyAdmin path is: /myadminphp (i.e.: yourwebsite.com/myadminphp)${NC}"
+
+        ;;
+    *)
+
+  echo -e "${RED}Path was not changed!${NC}"
+
+        ;;
 esac
 
+#creating user
+echo -e "${YELLOW}Adding separate user & creating website home folder for secure running of your website...${NC}"
 
-## -------------------------------------
-##     creating user
-## -------------------------------------
-  echo -e "${YELLOW} Adding separate user &
-  \t\t creating website home folder for secure running of your website... ${NC}"
-
-  echo -e "${YELLOW}Enter new username: ${NC}" && read username
-  echo -e "${YELLOW}Please enter website name: ${NC}" && read websitename
+  echo -e "${YELLOW}Please, enter new username: ${NC}"
+  read username
+  echo -e "${YELLOW}Please enter website name: ${NC}"
+  read websitename
   groupadd $username
   adduser --home /var/www/$username/$websitename --ingroup $username $username
-  mkdir -p /var/www/$username/$websitename/www
+  mkdir /var/www/$username/$websitename/www
   chown -R $username:$username /var/www/$username/$websitename
-  echo -e "${GREEN} User, group and home folder were succesfully created!
-  ${PURPLE} Username: $username
-  ${PURPLE} Group: $username
-  ${PURPLE} Home folder: /var/www/$username/$websitename
-  ${PURPLE} Website folder: /var/www/$username/$websitename/www ${NC}"
-  TIMER
+  echo -e "${GREEN}User, group and home folder were succesfully created!
+  Username: $username
+  Group: $username
+  Home folder: /var/www/$username/$websitename
+  Website folder: /var/www/$username/$websitename/www${NC}"
 
 
+#configuring apache2
+echo -e "${YELLOW}Now we going to configure apache2 for your domain name & website root folder...${NC}"
 
-
-## -------------------------------------
-##   configuring apache2
-## -------------------------------------
-echo -e "${YELLOW} Now we going to configure apache2 for your domain name & website root folder... ${NC}"
 read -r -p "Do you want to configure Apache2 automatically? [y/N] " response
 case $response in
-    [yY][eE][sS]|[yY])
+    [yY][eE][sS]|[yY]) 
 
   echo -e "Please, provide us with your domain name: "
   read domain_name
@@ -302,7 +309,7 @@ case $response in
         CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 EOL
-        a2dissite 000-default
+	a2dissite 000-default
     a2ensite $domain_name
     service apache2 restart
     P_IP="`wget http://ipinfo.io/ip -qO -`"
@@ -319,74 +326,22 @@ EOL
 
         ;;
     *)
-  echo -e "${RED} WARNING!!! \n${YELLOW}Apache2 was not configured properly, you can do this manually or re run our script.${NC}"
+
+  echo -e "${RED}WARNING! Apache2 was not configured properly, you can do this manually or re run our script.${NC}"
+
         ;;
 esac
 
-
-## #########################################
 #downloading WordPress, unpacking, adding basic pack of plugins, creating .htaccess with optimal & secure configuration
-echo -e "${YELLOW}On this step we going to download latest version of WordPress with EN or RUS language, 
-set optimal & secure configuration and add basic set of plugins...${NC}"
+echo -e "${YELLOW}On this step we going to download latest version of WordPress with EN or RUS language, set optimal & secure configuration and add basic set of plugins...${NC}"
 
 read -r -p "Do you want to install WordPress & automatically set optimal and secure configuration with basic set of plugins? [y/N] " response
 case $response in
-    [yY][eE][sS]|[yY])
+    [yY][eE][sS]|[yY]) 
 
+  echo -e "${GREEN}Please, choose WordPress language you need (set RUS or ENG): "
+  read wordpress_lang
 
-
-
-function WPLangDef() {
-## ---------------------
-while true; do
-
-echo -en "
-\t${GREEN}[R] ${NC} ussion language . . . [RU]
-\t${YELLOW}[E] ${NC} nglish language . . . [EN]
-\t${BLUE}[D] ${NC} efault  . . . . . . . [EN]${NC}"
-
-read -e -p "Please, choose WordPress language you need [ Russion / English / Default ]: " wpl
-  case $wpl in
-    [Rr]* ) echo "Is Select Russion language.\n Now start Download WordPress.\n"; wordpress_lang="RUS"; TIMER; break ;;
-    [Ee]* ) echo "Is Select English language.\n Now start Download WordPress.\n"; wordpress_lang="ENG"; TIMER; break ;;
-    [Dd]* ) echo "Default language-${GREEN}English${NC}.\nDownload WordPress.\n"; wordpress_lang="ENG"; TIMER; break ;;
-  esac
-done
-## ------------------
-
-
-
-
-  echo
-echo -e "${GREEN}Please, choose WordPress language you need (set RUS or ENG): ${NC}"
-  echo -e "\t1. Russion language (RUS)"
-  echo -e "\t2. English lang (ENG)"
-  echo -e "\t3. Default (ENG)"
-  echo -en "\t\tВведите: "
-  read -n 1 option
-}
-# меню.
-while [ $? -ne 1 ]
-do
-  menu
-  case $option in
-    0) # Exit menu
-    break
-    ;;
-    1) wordpress_lang="RUS"
-    ;;
-    2) wordpress_lang="ENG"
-    ;;
-    3) wordpress_lang="ENG"
-    ;;
-    *) clear && echo "Нужно выбрать раздел"
-    ;;
-  esac
-  echo -en "\n\n\t\t\tНажмите любую клавишу для продолжения";
-  read -n 1 line
-done
-
-  # read wordpress_lang
   if [ "$wordpress_lang" == 'RUS' ];
     then
     wget https://ru.wordpress.org/latest-ru_RU.zip -O /tmp/$wordpress_lang.zip
@@ -400,19 +355,17 @@ done
   mv /var/www/$username/$websitename/www/wordpress/* /var/www/$username/$websitename/www
   rm -rf /var/www/$username/$websitename/www/wordpress
   rm /tmp/$wordpress_lang.zip
-  mkdir -p /var/www/$username/$websitename/www/wp-content/uploads
+  mkdir /var/www/$username/$websitename/www/wp-content/uploads
   chmod -R 777 /var/www/$username/$websitename/www/wp-content/uploads
 
   echo -e "Now we going to download some useful plugins:
   1. Google XML Sitemap generator
   2. Social Networks Auto Poster
   3. Add to Any
-  4. Easy Watermark";
-
-  sleep 10
-  PLG_SITEMAP="https://wordpress.org/plugins/google-sitemap-generator/"
-  PLG_ZIP_SITEMAP="https://downloads.wordpress.org/plugin/google-sitemap-generator.*.*.*.zip"
-  SITEMAP="`curl ${PLG_SITEMAP} | grep ${PLG_ZIP_SITEMAP} | awk '{print $3}' | sed -ne 's/.*\(http[^"]*.zip\).*/\1/p'`"
+  4. Easy Watermark"
+  sleep 7
+  
+  SITEMAP="`curl https://wordpress.org/plugins/google-sitemap-generator/ | grep https://downloads.wordpress.org/plugin/google-sitemap-generator.*.*.*.zip | awk '{print $3}' | sed -ne 's/.*\(http[^"]*.zip\).*/\1/p'`"
   wget $SITEMAP -O /tmp/sitemap.zip
   unzip /tmp/sitemap.zip -d /tmp/sitemap
   mv /tmp/sitemap/* /var/www/$username/$websitename/www/wp-content/plugins/
@@ -420,17 +373,13 @@ done
   wget https://downloads.wordpress.org/plugin/social-networks-auto-poster-facebook-twitter-g.zip -O /tmp/snap.zip
   unzip /tmp/snap.zip -d /tmp/snap
   mv /tmp/snap/* /var/www/$username/$websitename/www/wp-content/plugins/
-  
-  PLG_ADDTOANY="https://wordpress.org/plugins/add-to-any/"
-  PLG_ZIP_ADDTOANY="https://downloads.wordpress.org/plugin/add-to-any.*.*.zip"
-  ADDTOANY="`curl ${PLG_ADDTOANY} | grep ${PLG_ZIP_ADDTOANY} | awk '{print $3}' | sed -ne 's/.*\(http[^"]*.zip\).*/\1/p'`"
+
+  ADDTOANY="`curl https://wordpress.org/plugins/add-to-any/ | grep https://downloads.wordpress.org/plugin/add-to-any.*.*.zip | awk '{print $3}' | sed -ne 's/.*\(http[^"]*.zip\).*/\1/p'`"
   wget $ADDTOANY -O /tmp/addtoany.zip
   unzip /tmp/addtoany.zip -d /tmp/addtoany
   mv /tmp/addtoany/* /var/www/$username/$websitename/www/wp-content/plugins/
-  
-  PLG_WATERMARK="https://wordpress.org/plugins/easy-watermark/"
-  PLG_ZIP_WATERMARK="https://downloads.wordpress.org/plugin/easy-watermark.*.*.*.zip"
-  WATERMARK="`curl ${PLG_WATERMARK} | grep ${PLG_ZIP_WATERMARK} | awk '{print $3}' | sed -ne 's/.*\(http[^"]*.zip\).*/\1/p'`"
+
+  WATERMARK="`curl https://wordpress.org/plugins/easy-watermark/ | grep https://downloads.wordpress.org/plugin/easy-watermark.*.*.*.zip | awk '{print $3}' | sed -ne 's/.*\(http[^"]*.zip\).*/\1/p'`"
   wget $WATERMARK -O /tmp/watermark.zip
   unzip /tmp/watermark.zip -d /tmp/watermark
   mv /tmp/watermark/* /var/www/$username/$websitename/www/wp-content/plugins/
@@ -454,7 +403,7 @@ echo -e "On next step we going to create SWAP (it should be your RAM x2)..."
 
 read -r -p "Do you need SWAP? [y/N] " response
 case $response in
-    [yY][eE][sS]|[yY])
+    [yY][eE][sS]|[yY]) 
 
   RAM="`free -m | grep Mem | awk '{print $2}'`"
   swap_allowed=$(($RAM * 2))
@@ -624,23 +573,23 @@ echo -e "${GREEN} Configuring apache2 prefork & worker modules...${NC}"
 sleep 3
 cat >/etc/apache2/mods-available/mpm_prefork.conf <<EOL
 <IfModule mpm_prefork_module>
-        StartServers                     1
-        MinSpareServers           1
-        MaxSpareServers          3
-        MaxRequestWorkers         10
-        MaxConnectionsPerChild   3000
+	StartServers			 1
+	MinSpareServers		  1
+	MaxSpareServers		 3
+	MaxRequestWorkers	  10
+	MaxConnectionsPerChild   3000
 </IfModule>
 EOL
 
 cat > /etc/apache2/mods-available/mpm_worker.conf <<EOL
 <IfModule mpm_worker_module>
-        StartServers                     1
-        MinSpareThreads          5
-        MaxSpareThreads          15
-        ThreadLimit                      25
-        ThreadsPerChild          5
-        MaxRequestWorkers         25
-        MaxConnectionsPerChild   200
+	StartServers			 1
+	MinSpareThreads		 5
+	MaxSpareThreads		 15
+	ThreadLimit			 25
+	ThreadsPerChild		 5
+	MaxRequestWorkers	  25
+	MaxConnectionsPerChild   200
 </IfModule>
 EOL
 
@@ -697,7 +646,7 @@ define('NONCE_SALT',       '$db_user');
 define('WP_DEBUG', false);
 
 if ( !defined('ABSPATH') )
-        define('ABSPATH', dirname(__FILE__) . '/');
+	define('ABSPATH', dirname(__FILE__) . '/');
 
 require_once(ABSPATH . 'wp-settings.php');
 EOL
@@ -705,50 +654,6 @@ EOL
 chown -R $username:$username /var/www/$username
 echo -e "${GREEN}Database user, database and wp-config.php were succesfully created & configured!${NC}"
 sleep 3
+echo -e "Installation & configuration succesfully finished."
 
-echo -en "Installation & configuration succesfully finished. \n ======= Bye-Bye! ========"
-
-## ==================================================
-}
-
-## #############################
-
-## -----------------------------
-##    Меню
-## -----------------------------
-function menu {
-  clear
-  echo
-  echo -e "\t\t\tМеню Установки\n"
-  echo -e "\t1. Install Wordpress and LAMP stackA pache, mysql, phpmyadmin and other software"
-  echo -e "\t2. "
-  echo -e "\t3. "
-  echo -e "\t0. Выход"
-  echo -en "\t\tВведите номер раздела: "
-  read -n 1 option
-}
-# меню.
-while [ $? -ne 1 ]
-do
-  menu
-  case $option in
-    0) # Exit menu
-    break
-    ;;
-    1) START_WORDPRESS_LAMP
-    ;;
-    2)  
-    ;;
-    3) 
-    ;;
-    *) clear && echo "Нужно выбрать раздел"
-    ;;
-  esac
-  echo -en "\n\n\t\t\tНажмите любую клавишу для продолжения";
-  read -n 1 line
-done
-clear
-exit 1
-
-## #############################
-
+# exit

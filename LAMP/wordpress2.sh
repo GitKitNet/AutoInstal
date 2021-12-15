@@ -46,7 +46,7 @@ function DATA() { DATA=$(date +%Y-%m-%d_%k%M%S) && echo "$DATA"; }
 BLUE='\033[0;34m'               # BLUE
 GREEN='\033[0;32m'              # GREEN
 RED='\033[0;31m'                # RED
-YELLOW='\033[0;33m'             # YELLOW
+YELLOW="\033[0;33m"             # YELLOW
 PURPLE='\033[0;4;35m'           # PURPLE
 CYAN='\033[4;36m'               # CYAN
 NC='\033[0m'                    # No Color
@@ -62,7 +62,7 @@ First of all, we going to check all required packeges..."
 # -------------------------------------
 
 echo -e "${YELLOW}Checking UPdate packages...${NC}"
-read -r -p "Do you want to check packeges? [y/N] " response
+read -r -p "Do you want to update pac...? [y/N] " response
 case $response in
     [yY][eE][sS]|[yY]) apt-get update -y && apt-get upgrade -y ;;
     *) echo -e "${RED}Packeges update is ignored!${NC}" ;;

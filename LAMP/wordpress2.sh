@@ -67,6 +67,8 @@ read -r -p "Do you want to check packeges? [y/N] " response
 case $response in
     [yY][eE][sS]|[yY]) 
 
+apt-get update -y && \
+  apt-get upgrade -y;
 
 NANO=$(dpkg-query -W -f='${Status}' nano 2>/dev/null | grep -c "ok installed")
   if [ $(dpkg-query -W -f='${Status}' nano 2>/dev/null | grep -c "ok installed") -eq 0 ];

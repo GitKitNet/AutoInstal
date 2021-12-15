@@ -167,15 +167,7 @@ CURL=$(dpkg-query -W -f='${Status}' curl 2>/dev/null | grep -c "ok installed")
   fi
 
   ;;
-
-    *)
-
-  echo -e "${RED}
-  Packeges check is ignored! 
-  Please be aware, that apache2, mysql, phpmyadmin and other software may not be installed!
-  ${NC}"
-
-  ;;
+    *)  echo -en "${RED} Packeges check is ignored! \nPlease be aware, that apache2, mysql, phpmyadmin and other software may not be installed!${NC}" ;;
 esac
 
 
@@ -340,10 +332,10 @@ case $response in
     [yY][eE][sS]|[yY]) 
 
   echo -e "${GREEN}Please, choose WordPress language you need (set RUS or ENG): "
-  read wordpress_lang
+  # read wordpress_lang
+  wordpress_lang='RUS'
 
-  if [ "$wordpress_lang" == 'RUS' ];
-    then
+  if [ "$wordpress_lang" == 'RUS' ]; then
     wget https://ru.wordpress.org/latest-ru_RU.zip -O /tmp/$wordpress_lang.zip
   else
     wget https://wordpress.org/latest.zip -O /tmp/$wordpress_lang.zip
@@ -387,20 +379,15 @@ case $response in
   rm /tmp/sitemap.zip /tmp/snap.zip /tmp/addtoany.zip /tmp/watermark.zip
   rm -rf /tmp/sitemap/ /tmp/snap/ /tmp/addtoany/ /tmp/watermark/
 
-
-  echo -e "Downloading of plugins finished! All plugins were transfered into /wp-content/plugins directory.${NC}"
-
-        ;;
-    *)
-
-  echo -e "${RED}WordPress and plugins were not downloaded & installed. You can do this manually or re run this script.${NC}"
-
-        ;;
+  echo -e "Downloading of plugins finished! All plugins were transfered into /wp-content/plugins directory.${NC}" ;;
+    *) echo -e "${RED}WordPress and plugins were not downloaded & installed. You can do this manually or re run this script.${NC}" ;;
 esac
 
-#creating of swap
-echo -e "On next step we going to create SWAP (it should be your RAM x2)..."
 
+
+# creating of swap
+# -------------------------------------
+echo -e "On next step we going to create SWAP (it should be your RAM x2)..."
 read -r -p "Do you need SWAP? [y/N] " response
 case $response in
     [yY][eE][sS]|[yY]) 
@@ -418,14 +405,11 @@ case $response in
   sleep 5
 
         ;;
-    *)
-
-  echo -e "${RED}You didn't create any swap for faster system working. You can do this manually or re run this script.${NC}"
-
-        ;;
+    *) echo -e "${RED}You didn't create any swap for faster system working. You can do this manually or re run this script.${NC}" ;;
 esac
 
 #creation of secure .htaccess
+# -------------------------------------
 echo -e "${YELLOW}Creation of secure .htaccess file...${NC}"
 sleep 3
 cat >/var/www/$username/$websitename/www/.htaccess <<EOL

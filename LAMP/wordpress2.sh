@@ -60,15 +60,22 @@ First of all, we going to check all required packeges..."
 
 #CHECKING PACKAGES
 # -------------------------------------
+
+echo -e "${YELLOW}Checking UPdate packages...${NC}"
+read -r -p "Do you want to check packeges? [y/N] " response
+case $response in
+    [yY][eE][sS]|[yY]) apt-get update -y && apt-get upgrade -y ;;
+    *) echo -e "${RED}Packeges update is ignored!${NC}" ;;
+esac
+
+
+# install
 echo -e "${YELLOW}Checking packages...${NC}"
 echo -e "List of required packeges: nano, zip, unzip, mc, htop, fail2ban, apache2 & php, mysql, php curl, phpmyadmin, wget, curl"
 
 read -r -p "Do you want to check packeges? [y/N] " response
 case $response in
     [yY][eE][sS]|[yY]) 
-
-apt-get update -y && \
-  apt-get upgrade -y;
 
 NANO=$(dpkg-query -W -f='${Status}' nano 2>/dev/null | grep -c "ok installed")
   if [ $(dpkg-query -W -f='${Status}' nano 2>/dev/null | grep -c "ok installed") -eq 0 ];

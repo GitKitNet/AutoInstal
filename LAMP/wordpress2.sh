@@ -39,6 +39,15 @@ function TIMER() { if [[ "$1" =~ ^[[:digit:]]+$ ]]; then T="$1"; else T="3"; fi;
 SE="$((1 * ${T}))" && SC='\033[0K\r';
 while [ $SE -gt 0 ]; do echo -ne "\t $SE$SC"; sleep 1 && : $((SE--)); done; }
 function DATA() { DATA=$(date +%Y-%m-%d_%k%M%S) && echo "$DATA"; }
+function APT_INSTALL() {
+APTGET=$(dpkg-query -W -f='${Status}' $1 2>/dev/null | grep -c "ok installed")
+  if [ "${APTGET}" -eq 0 ]; then
+    echo -en "${YELLOW}Installing $1 ${NC}" && apt-get install $1 --yes;
+    elif [ "${APTGET}" -eq 1 ]; then
+      echo -en "${GREEN} $1 is installed!${NC}"
+  fi
+}
+
 
 ## -------------------------------------
 ##      COLORS SETTINGS
@@ -76,116 +85,19 @@ echo -e "List of required packeges: nano, zip, unzip, mc, htop, fail2ban, apache
 read -r -p "Do you want to check packeges? [y/N] " response
 case $response in
     [yY][eE][sS]|[yY]) 
-
-NANO=$(dpkg-query -W -f='${Status}' nano 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' nano 2>/dev/null | grep -c "ok installed") -eq 0 ];
-  then
-    echo -e "${YELLOW}Installing nano${NC}"
-    apt-get install nano --yes;
-    elif [ $(dpkg-query -W -f='${Status}' nano 2>/dev/null | grep -c "ok installed") -eq 1 ];
-    then
-      echo -e "${GREEN}nano is installed!${NC}"
-  fi
-
-ZIP=$(dpkg-query -W -f='${Status}' zip 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' zip 2>/dev/null | grep -c "ok installed") -eq 0 ];
-  then
-    echo -e "${YELLOW}Installing zip${NC}"
-    apt-get install zip --yes;
-    elif [ $(dpkg-query -W -f='${Status}' zip 2>/dev/null | grep -c "ok installed") -eq 1 ];
-    then
-      echo -e "${GREEN}zip is installed!${NC}"
-  fi
-
-MC=$(dpkg-query -W -f='${Status}' mc 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' mc 2>/dev/null | grep -c "ok installed") -eq 0 ];
-  then
-    echo -e "${YELLOW}Installing mc${NC}"
-    apt-get install mc --yes;
-    elif [ $(dpkg-query -W -f='${Status}' mc 2>/dev/null | grep -c "ok installed") -eq 1 ];
-    then
-      echo -e "${GREEN}mc is installed!${NC}"
-  fi
-
-HTOP=$(dpkg-query -W -f='${Status}' htop 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' htop 2>/dev/null | grep -c "ok installed") -eq 0 ];
-  then
-    echo -e "${YELLOW}Installing htop${NC}"
-    apt-get install htop --yes;
-    elif [ $(dpkg-query -W -f='${Status}' htop 2>/dev/null | grep -c "ok installed") -eq 1 ];
-    then
-      echo -e "${GREEN}htop is installed!${NC}"
-  fi
-
-FAIL2BAN=$(dpkg-query -W -f='${Status}' fail2ban 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' fail2ban 2>/dev/null | grep -c "ok installed") -eq 0 ];
-  then
-    echo -e "${YELLOW}Installing fail2ban${NC}"
-    apt-get install fail2ban --yes;
-    elif [ $(dpkg-query -W -f='${Status}' fail2ban 2>/dev/null | grep -c "ok installed") -eq 1 ];
-    then
-      echo -e "${GREEN}fail2ban is installed!${NC}"
-  fi
-
-APACHE2=$(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok installed") -eq 0 ];
-  then
-    echo -e "${YELLOW}Installing apache2${NC}"
-    apt-get install apache2 php5 --yes;
-    elif [ $(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok installed") -eq 1 ];
-    then
-      echo -e "${GREEN}apache2 is installed!${NC}"
-  fi
-
-MYSQL=$(dpkg-query -W -f='${Status}' mysql-server 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' mysql-server 2>/dev/null | grep -c "ok installed") -eq 0 ];
-  then
-    echo -e "${YELLOW}Installing mysql-server${NC}"
-    apt-get install mysql-server --yes;
-    elif [ $(dpkg-query -W -f='${Status}' mysql-server 2>/dev/null | grep -c "ok installed") -eq 1 ];
-    then
-      echo -e "${GREEN}mysql-server is installed!${NC}"
-  fi
-
-PHP5CURL=$(dpkg-query -W -f='${Status}' php5-curl 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' php5-curl 2>/dev/null | grep -c "ok installed") -eq 0 ];
-  then
-    echo -e "${YELLOW}Installing php5-curl${NC}"
-    apt-get install php5-curl --yes;
-    elif [ $(dpkg-query -W -f='${Status}' php5-curl 2>/dev/null | grep -c "ok installed") -eq 1 ];
-    then
-      echo -e "${GREEN}php5-curl is installed!${NC}"
-  fi
-
-PHPMYADMIN=$(dpkg-query -W -f='${Status}' phpmyadmin 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' phpmyadmin 2>/dev/null | grep -c "ok installed") -eq 0 ];
-  then
-    echo -e "${YELLOW}Installing phpmyadmin${NC}"
-    apt-get install phpmyadmin --yes;
-    elif [ $(dpkg-query -W -f='${Status}' phpmyadmin 2>/dev/null | grep -c "ok installed") -eq 1 ];
-    then
-      echo -e "${GREEN}phpmyadmin is installed!${NC}"
-  fi
-
-WGET=$(dpkg-query -W -f='${Status}' wget 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' wget 2>/dev/null | grep -c "ok installed") -eq 0 ];
-  then
-    echo -e "${YELLOW}Installing wget${NC}"
-    apt-get install wget --yes;
-    elif [ $(dpkg-query -W -f='${Status}' wget 2>/dev/null | grep -c "ok installed") -eq 1 ];
-    then
-      echo -e "${GREEN}wget is installed!${NC}"
-  fi
-
-CURL=$(dpkg-query -W -f='${Status}' curl 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' curl 2>/dev/null | grep -c "ok installed") -eq 0 ];
-  then
-    echo -e "${YELLOW}Installing curl${NC}"
-    apt-get install curl --yes;
-    elif [ $(dpkg-query -W -f='${Status}' curl 2>/dev/null | grep -c "ok installed") -eq 1 ];
-    then
-      echo -e "${GREEN}curl is installed!${NC}"
-  fi
+    
+  APT_INSTALL curl
+  APT_INSTALL wget
+  APT_INSTALL nano
+  APT_INSTALL zip
+  APT_INSTALL mc
+  APT_INSTALL unzip
+  APT_INSTALL htop
+  APT_INSTALL fail2ban
+  APT_INSTALL apache2
+  APT_INSTALL mysql-server
+  APT_INSTALL php5-curl
+  APT_INSTALL phpmyadmin
 
  ;;
     *) echo -e "${RED} Packeges check is ignored! \n Please be aware, that apache2, mysql, phpmyadmin and other software may not be installed! ${NC}" ;;

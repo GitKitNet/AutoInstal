@@ -199,7 +199,9 @@ case $response in
     [yY][eE][sS]|[yY]) 
 
   echo -e "Please, provide us with your domain name [domain.com]: "
-  read domain_name
+  #read domain_name
+  domain_name="$websitename"
+
   echo -e "Please, provide us with your email [ root@domain ]: "
   read domain_email
   if [ -z "${domain_email}" ]; then domain_email=admin@${websitename}; fi;
@@ -242,28 +244,25 @@ EOL
     service apache2 restart
     P_IP="`wget http://ipinfo.io/ip -qO -`"
 
-    echo -e "${GREEN}Apache2 config was updated!
-    New config file was created: /etc/apache2/sites-available/$domain_name.conf
-    Domain was set to: $domain_name
-    Admin email was set to: $domain_email
-    Root folder was set to: /var/www/$websitename
-    Option Indexes was set to: -Indexes (to close directory listing)
-    Your server public IP is: $P_IP (Please, set this IP into your domain name 'A' record)
-    Website was activated & apache2 service reloaded!
-    ${NC}"
-
-        ;;
-    *)
-
-  echo -e "${RED}WARNING! Apache2 was not configured properly, you can do this manually or re run our script.${NC}"
-
-        ;;
+    echo -en "${GREEN}Apache2 config was updated!\n
+    Config:            /etc/apache2/sites-available/$domain_name.conf
+    Domain:            $domain_name
+    Admin email:       $domain_email
+    Root folder:       /var/www/$websitename
+    Option Indexes:    -Indexes (to close directory listing)
+    Server IP(public): $P_IP 
+    (Please, set this IP into your domain name 'A' record)
+    
+    Website was activated & apache2 service reloaded! ${NC}\n"  ;;
+    *) echo -e "${RED}WARNING! Apache2 was not configured properly, you can do this manually or re run our script.${NC}"  ;;
 esac
+
+
+
 
 # DOWNLOADING WORDPRESS, UNPACKING, ADDING BASIC PACK OF PLUGINS, CREATING .HTACCESS WITH OPTIMAL & SECURE CONFIGURATION
 # -------------------------------------
 echo -e "${YELLOW}On this step we going to download latest version of WordPress with EN or RUS language, set optimal & secure configuration and add basic set of plugins...${NC}"
-
 read -r -p "Do you want to install WordPress & automatically set optimal and secure configuration with basic set of plugins? [y/N] " response
 case $response in
     [yY][eE][sS]|[yY]) 
@@ -315,13 +314,13 @@ case $response in
   unzip /tmp/watermark.zip -d /tmp/watermark
   mv /tmp/watermark/* /var/www/$websitename/wp-content/plugins/
 
-  rm /tmp/sitemap.zip /tmp/snap.zip /tmp/addtoany.zip /tmp/watermark.zip
+  rm -rf /tmp/sitemap.zip /tmp/snap.zip /tmp/addtoany.zip /tmp/watermark.zip
   rm -rf /tmp/sitemap/ /tmp/snap/ /tmp/addtoany/ /tmp/watermark/
-
 
   echo -e "Downloading of plugins finished! All plugins were transfered into /wp-content/plugins directory.${NC}" ;;
     *) echo -e "${RED}WordPress and plugins were not downloaded & installed. You can do this manually or re run this script.${NC}" ;;
 esac
+
 
 #creating of swap
 # -------------------------------------

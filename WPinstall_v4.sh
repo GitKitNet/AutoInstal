@@ -35,7 +35,7 @@ if [ "$key" = '' ]; then
           if [ -z $dname ]; then
           {
             echo -e "\e[1;31mNo domain name given\e[0m"
-            exit 1
+            #exit 1
           }
           fi
          PATTERN="^([[:alnum:]]([[:alnum:]\-]{0,61}[[:alnum:]])?\.)+[[:alpha:]]{2,6}$"
@@ -44,7 +44,7 @@ if [ "$key" = '' ]; then
           echo "Creating hosting for:" $dname
           else
            echo -e "\e[1;31minvalid domain name\e[0m"
-           exit 1
+           #exit 1
            fi
           echo "-----------------------PART 1 completed succesfully--------------------------------------------------------"   
           echo "-----------------------------------------------------------------------------------------------------------"
@@ -53,10 +53,12 @@ if [ "$key" = '' ]; then
       echo "---------------------------------------------------------------------------------------------------------"
            echo "----------------------------PART 2 STARTED----------------------------------------------------------------"
     echo "-----------------------------Lets start with Installaton--------------------------------------------------"
-     read  -s -p "Enter the password for the Database" dbpass
+     #read  -s -p "Enter the password for the Database" dbpass
+    dbpass="$(date +%s | sha256sum | base64 | head -c 22)"
+    echo -e "Password for the Database: ${dbpass}"
     #add the packages name that you want to install or check in below array
     # apache2 apache2-bin apache2-data apache2-utils libapache2-mod-php7.3 libapr1 libaprutil1 libaprutil1-dbd-sqlite3 libaprutil1-ldap libjansson4 liblua5.2-0 libmagic-mgc libmagic1 php-common php7.3 php7.3-cli php7.3-common php7.3-json php7.3-opcache php7.3-readline ssl-cert
-    package=( mysql-server nginx php-fpm php-mysql php-gd php-ssh2)
+    package=( mysql-server nginx php-fpm php-mysql php-gd php-ssh2 php-xml php-bz2 php-zip php-mysql php-intl php-gd php-soap php-mbstring php-bcmath)
     #package=( mysql-server nginx php7.3-fpm php7.3-xml php7.3-bz2 php7.3-zip php7.3-mysql php7.3-intl php7.3-gd php7.3-curl php7.3-soap php7.3-mbstring php7.3-bcmath php-gd php7.3-gd php-ssh2)
     for var in "${package[@]}"
            do
@@ -189,7 +191,7 @@ if [ $? == 0 ]
     else
      {
         echo -e "\e[1;31m unable to Download Wordpress\e[0m"
-        exit 1
+        #exit 1
      }    
 fi
 echo "......UnZip ....Configure of wp-config.php......--------------------------------------------------------------------"
@@ -276,7 +278,7 @@ sudo service php5-fpm restart >> /tmp/wordpress-setup.log 2>> /tmp/wordpress-set
       else
        {
          echo -e "\e[1;31m--There was problem while restarting ph5-fpm please check log /tmp/wordpress-setup-error.log-------\e[0m" 
-         exit
+         #exit
        }   
       fi
  sudo rm -rf wordpress
@@ -291,7 +293,7 @@ echo "--------------------------------------------------------------------------
         else
         {
          echo -e "\e[1;31m---------can't update the source list--------\e[0m"
-         exit 1
+         #exit 1
         }
        fi
      }

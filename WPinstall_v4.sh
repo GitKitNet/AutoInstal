@@ -55,8 +55,8 @@ if [ "$key" = '' ]; then
      read  -s -p "Enter the password for the Database" dbpass
     #add the packages name that you want to install or check in below array
     # apache2 apache2-bin apache2-data apache2-utils libapache2-mod-php7.3 libapr1 libaprutil1 libaprutil1-dbd-sqlite3 libaprutil1-ldap libjansson4 liblua5.2-0 libmagic-mgc libmagic1 php-common php7.3 php7.3-cli php7.3-common php7.3-json php7.3-opcache php7.3-readline ssl-cert
-    package=( mysql-server nginx php-fpm php5-mysql php5-gd libssh2-php)
-    package=( mysql-server nginx php7.3 php7.3-fpm php7.3-xml php7.3-bz2 php7.3-zip php7.3-mysql php7.3-intl php7.3-gd php7.3-curl php7.3-soap php7.3-mbstring php7.3-bcmath php-gd php7.3-gd php-ssh2)
+    package=( mysql-server nginx php-fpm php-mysql php-gd php-ssh2)
+    #package=( mysql-server nginx php7.3-fpm php7.3-xml php7.3-bz2 php7.3-zip php7.3-mysql php7.3-intl php7.3-gd php7.3-curl php7.3-soap php7.3-mbstring php7.3-bcmath php-gd php7.3-gd php-ssh2)
     for var in "${package[@]}"
            do
      dpkg-query -W "${var}" > /tmp/wordpress-install.log 2> /tmp/wordpress-install-error.log

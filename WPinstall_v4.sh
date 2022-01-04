@@ -84,7 +84,7 @@ if [ "$key" = '' ]; then
            else
             {
                echo -e "\e[1;31m--ERROR--- There was problem while installing ${var}----\e[0m" 
-               exit 1
+               #exit 1
             }
            fi
           
@@ -102,7 +102,7 @@ if [ "$key" = '' ]; then
          else
           {           
             echo -e "\e[1;31m--ERROR--- There was problem while installing ${var}----\e[0m" 
-            exit 1
+            #exit 1
           }   
          fi
          }
@@ -132,7 +132,7 @@ if [ $? == 0 ]
     else
      {
         echo -e "\e[1;31munable to create the database please check the error log /tmp/wordpress-mysql-error.log\e[0m"
-        exit 1
+        #exit 1
      }    
 fi
 mysql -uroot -p$dbpass -e "CREATE USER $DBNAME@$DBHOST IDENTIFIED BY '$DPASSWD';" >> /tmp/wordpress-mysql.log 2>> /tmp/wordpress-mysql-error.log

@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # bash <(wget -O - raw.githubusercontent.com/numbnet/AutoInstall/master/WPinstall_v4.sh || curl -sL raw.githubusercontent.com/numbnet/AutoInstall/master/WPinstall_v4.sh)
 
 clear

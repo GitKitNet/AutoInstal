@@ -12,8 +12,7 @@ read -n1 -r -p "Press ENTER to continue..." key
 if [ "$key" = '' ]; then
   {
      ping -c1 8.8.8.8  &> /dev/null
-     if [ $? != 0 ]
-     then
+     if [ $? != 0 ]; then
      { 
        echo -e "\e[1;31mCheck your Internet connection\e[0m"
      }
@@ -22,8 +21,7 @@ if [ "$key" = '' ]; then
        echo "-----------Ready for installation----------------------------------------------------------------------------"
        echo "-----------Updating the source list--------------------------------------------------------------------------"
        sudo apt-get update  > /dev/null
-        if [ $? == 0 ] 
-        then
+        if [ $? == 0 ]; then
         {
            echo "---------------------------------------------------------------------------------------------------------"
            echo "----------------------------PART 1 STARTED---------------------------------------------------------------"
@@ -32,20 +30,19 @@ if [ "$key" = '' ]; then
            read  -p  "Enter the Domain Name (for example rupin.com)" dname
            IP="127.0.0.1"
            sudo -- sh -c -e "echo '$IP $dname' >> /etc/hosts";
-          if [ -z $dname ]; then
-          {
+          if [ -z $dname ]; then {
             echo -e "\e[1;31mNo domain name given\e[0m"
             #exit 1
           }
           fi
          PATTERN="^([[:alnum:]]([[:alnum:]\-]{0,61}[[:alnum:]])?\.)+[[:alpha:]]{2,6}$"
           if [[ "$dname" =~ $PATTERN ]]; then
-          DOMAIN=`echo $dname | tr '[A-Z]' '[a-z]'`
-          echo "Creating hosting for:" $dname
+            DOMAIN=`echo $dname | tr '[A-Z]' '[a-z]'`
+            echo "Creating hosting for:" $dname
           else
            echo -e "\e[1;31minvalid domain name\e[0m"
            #exit 1
-           fi
+          fi
           echo "-----------------------PART 1 completed succesfully--------------------------------------------------------"   
           echo "-----------------------------------------------------------------------------------------------------------"
 
@@ -56,23 +53,22 @@ if [ "$key" = '' ]; then
      #read  -s -p "Enter the password for the Database" dbpass
     dbpass="$(date +%s | sha256sum | base64 | head -c 22)"
     echo -e "Password for the Database: ${dbpass}"
+    echo -e "Password for the Database: ${dbpass}">> ~/.akkaunts
+    
     #add the packages name that you want to install or check in below array
-    # apache2 apache2-bin apache2-data apache2-utils libapache2-mod-php7.3 libapr1 libaprutil1 libaprutil1-dbd-sqlite3 libaprutil1-ldap libjansson4 liblua5.2-0 libmagic-mgc libmagic1 php-common php7.3 php7.3-cli php7.3-common php7.3-json php7.3-opcache php7.3-readline ssl-cert
+     # apache2 apache2-bin apache2-data apache2-utils libapache2-mod-php7.3 libapr1 libaprutil1 libaprutil1-dbd-sqlite3 libaprutil1-ldap libjansson4 liblua5.2-0 libmagic-mgc libmagic1 php-common php7.3 php7.3-cli php7.3-common php7.3-json php7.3-opcache php7.3-readline ssl-cert
+     #package=( mysql-server nginx php7.3-fpm php7.3-xml php7.3-bz2 php7.3-zip php7.3-mysql php7.3-intl php7.3-gd php7.3-curl php7.3-soap php7.3-mbstring php7.3-bcmath php-gd php7.3-gd php-ssh2)
+
     package=( mysql-server nginx php-fpm php-mysql php-gd php-ssh2 php-xml php-bz2 php-zip php-mysql php-intl php-gd php-soap php-mbstring php-bcmath)
-    #package=( mysql-server nginx php7.3-fpm php7.3-xml php7.3-bz2 php7.3-zip php7.3-mysql php7.3-intl php7.3-gd php7.3-curl php7.3-soap php7.3-mbstring php7.3-bcmath php-gd php7.3-gd php-ssh2)
     for var in "${package[@]}"
            do
      dpkg-query -W "${var}" > /tmp/wordpress-install.log 2> /tmp/wordpress-install-error.log
     
-          if [ $? == 0 ]  
-              then
+          if [ $? == 0 ]; then
                {
            echo "${var} is installed" 
-        }
-      else
-       {
-        if [ ${var} == "mysql-server" ]
-       then
+        } else {
+        if [ ${var} == "mysql-server" ]; then
        {
         echo "installing mysql-server now"
        # read  -s -p "Enter the password for the Database" dbpasswd
@@ -80,32 +76,23 @@ if [ "$key" = '' ]; then
         sudo debconf-set-selections <<< "mysql-server mysql-server/root_password password $dbpass"
         sudo debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $dbpass"
         sudo apt-get -y install mysql-server >> /tmp/wordpress-install.log 2>> /tmp/wordpress-install-error.log
-            if [ $? == 0 ]
-            then
-            {
+            if [ $? == 0 ]; then {
                 echo -e "-----------\e[1;32m ${var} was installed succesfully.\e[0m------------------------------------------" 
                 echo "-------------------------------------------------------------------------------------------------------"
-            }
-           else
-            {
+            } else {
                echo -e "\e[1;31m--ERROR--- There was problem while installing ${var}----\e[0m" 
                #exit 1
             }
            fi
-          
       }
      fi
-		echo "${var} is not installed"   
+        echo "${var} is not installed"   
         echo "${var} is installing right now "
         sudo apt-get install ${var} -y  >> /tmp/filelog 2>> /tmp/error.log
-         if [ $? == 0 ]
-          then
-          {
+         if [ $? == 0 ]; then {
             echo -e "-----------\e[1;32m${var} was installed succesfully.\e[0m------------------------------------------------" 
             echo "------------------------------------------------------------------------------------------------------------"
-          }
-         else
-          {           
+          } else {           
             echo -e "\e[1;31m--ERROR--- There was problem while installing ${var}----\e[0m" 
             #exit 1
           }   
@@ -129,8 +116,7 @@ DBUSER=wordpress
 DBPASSWD=test123
 echo -e "\n--- Setting up our MySQL user and db --------------------------------------------------------------------------------\n"
 mysql -uroot -p$dbpass -e "CREATE DATABASE $DBNAME" >> /tmp/wordpress-mysql.log 2>> /tmp/wordpress-mysql-error.log
-if [ $? == 0 ]
-    then
+if [ $? == 0 ]; then
      {
           echo -e "\n--- \e[1;32m Successfully created the database\e[0m \e[1;36m $DBNAME \e[0m---------------------------------\n"
      }
@@ -141,8 +127,7 @@ if [ $? == 0 ]
      }    
 fi
 mysql -uroot -p$dbpass -e "CREATE USER $DBNAME@$DBHOST IDENTIFIED BY '$DPASSWD';" >> /tmp/wordpress-mysql.log 2>> /tmp/wordpress-mysql-error.log
-if [ $? == 0 ]
-    then
+if [ $? == 0 ]; then
      {
         echo -e "\n--- \e[1;32m Successfully created the user\e[0m \e[36m$DBNAME\e[0m \e[32mwith password \e[0m \e[1;36m $DBPASSWD \e[0m ---\n"
      }
@@ -152,8 +137,7 @@ if [ $? == 0 ]
      }   
  fi
 mysql -uroot -p$dbpass -e "grant all privileges on $DBNAME.* to '$DBUSER'@'localhost' identified by '$DBPASSWD'" >> /tmp/wordpress-mysql.log 2>> /tmp/wordpress-mysql-error.log
-if [ $? == 0 ]
-    then
+if [ $? == 0 ]; then
      {
           echo -e "\n--- \e[32mSuccessfully granted the permission for the users\e[0m ------------------------------\n"
      }
@@ -175,15 +159,13 @@ echo "----------------------------PART 4 STARTED--------------------------------
 #download wordpress
 echo "Downloading the wordpress..........."
 ls lates* >> /tmp/wordpress-setup.log 2>> /tmp/wordpress-setup-error.log
-if [ $? == 0 ]
-    then
+if [ $? == 0 ]; then
      {
           sudo mv latest.* /tmp/
      }
 fi
 sudo wget https://wordpress.org/latest.tar.gz >> /tmp/wordpress-setup.log 2>> /tmp/wordpress-setup-error.log
-if [ $? == 0 ]
-    then
+if [ $? == 0 ]; then
      {
           echo -e "\n--- \e[32mDownloaded the Wordpress Successfully\e[0m------------------------------------------------"
 
@@ -256,8 +238,7 @@ EOF
 
 sudo ln -s /etc/nginx/sites-available/$dname.conf /etc/nginx/sites-enabled/
 sudo service nginx restart  >> /tmp/wordpress-setup.log 2>> /tmp/wordpress-setup-error.log
- if [ $? == 0 ]
-       then
+ if [ $? == 0 ]; then
         {
          echo -e "-----------\e[32mNginx was succesfully configured.\e[0m--------------------------------------------" 
          echo "------------------------------------------------------------------------------------------------------"
@@ -269,8 +250,7 @@ sudo service nginx restart  >> /tmp/wordpress-setup.log 2>> /tmp/wordpress-setup
        }   
       fi
 sudo service php5-fpm restart >> /tmp/wordpress-setup.log 2>> /tmp/wordpress-setup-error.log
- if [ $? == 0 ]
-       then
+ if [ $? == 0 ]; then
         {
          echo -e "-----------\e[32mphp5-fpm was succesfully restarted\e[0m--------------------------------------------" 
          echo "-------------------------------------------------------------------------------------------------------"

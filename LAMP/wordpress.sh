@@ -11,6 +11,7 @@
 # -------------------------------------
 
 function OSrelease {
+
   OS="$(cat /etc/*release |grep '^ID=' |sed 's/"//g' |awk -F= '{print $2 }' )";
   release="$(cat /etc/*release |grep '^VERSION_ID=' |sed  's/"//g' |awk -F= '{print $2 }' )";
 }; OSRel

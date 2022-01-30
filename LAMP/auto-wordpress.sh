@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# bash <(vurl -fsSL raw.githubusercontent.com/numbnet/AutoInstall/master/LAMP/auto-wordpress.sh)
 
 # ====================================== #
 #     Confiruge Server and WordPress     #

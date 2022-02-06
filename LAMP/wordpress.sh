@@ -313,12 +313,14 @@ case $response in
 
 
 
-  echo -e "${GREEN}Please, choose WordPress language you need (set RUS or ENG): "
-  case $response in
-    1) wordpress_lang=ru
-    2) wordpress_lang=en
-    *) wordpress_lang=en
+#  echo -e "${GREEN}Please, choose WordPress language you need (set RUS or ENG): "
+#  case $response in
+#    1) wordpress_lang=ru
+#    2) wordpress_lang=en
+#    *) wordpress_lang=en
+#  esac
 
+  wordpress_lang=ru
   if [ "$wordpress_lang" == 'ru' ]; then 
     wget https://ru.wordpress.org/latest-ru_RU.zip -O /tmp/$wordpress_lang.zip
   elif [ "$wordpress_lang" == 'en' ]; then 

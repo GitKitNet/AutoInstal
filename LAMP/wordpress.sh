@@ -6,35 +6,6 @@
 # ====================================== #
 
 
-# -------------------------------------
-#      VARIABLE & Function
-# -------------------------------------
-
-function TypeOS {
-
-  OS="$(cat /etc/*release |grep '^ID=' |sed 's/"//g' |awk -F= '{print $2 }' )";
-  release="$(cat /etc/*release |grep '^VERSION_ID=' |sed  's/"//g' |awk -F= '{print $2 }' )";
-}; TypeOS
-
-function wait() { echo -en "\n\tress [ANY] key to continue..." && read -s -n 1; }
-function pause() { echo -en "\n\tPress [ENTER] key to continue..." && read fackEnterKey; }
-function title { clear && echo "${title}" && wait; }
-
-function myip()
-{
-ipE="$(ip addr show eth0 |grep inet |awk '{ print $2; }' |sed 's/\/.*$//' | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}' )";
-ipW="$(curl -4 icanhazip.com)";
-ipH=$(hostname -I|cut -f1 -d ' ');
-
-if [ "$ipE" == "$ipW" ]; then myip="$ipE";
-elif [ "$ipH" == "$ipW" ]; then myip="$ipH";
-elif [ "$ipH" == "$ipE" ]; then myip="$ipW";
-fi; echo "${myip}";
-}
-
-function TIMER() { if [[ "$1" =~ ^[[:digit:]]+$ ]]; then T="$1"; else T="3"; fi; SE="$((1 * ${T}))" && SC='\033[0K\r'; while [ $SE -gt 0 ]; do echo -ne "\t $SE$SC"; sleep 1 && : $((SE--)); done; }
-function DATA() { DATA=$(date +%Y-%m-%d_%k%M%S) && echo "$DATA"; }
-
 ## -------------------------------------
 ##      Colors settings
 ## -------------------------------------
@@ -46,17 +17,55 @@ PURPLE='\033[0;4;35m'           # PURPLE
 CYAN='\033[4;36m'               # CYAN
 NC='\033[0m'                    # No Color
 
+# -------------------------------------
+#      VARIABLE & Function
+# -------------------------------------
+
+function TypeOS {
+  OS="$(cat /etc/*release |grep '^ID=' |sed 's/"//g' |awk -F= '{print $2 }' )";
+  release="$(cat /etc/*release |grep '^VERSION_ID=' |sed  's/"//g' |awk -F= '{print $2 }' )";
+}
+
+function wait() { echo -en "\n\tress [ANY] key to continue..." && read -s -n 1; }
+function pause() { echo -en "\n\tPress [ENTER] key to continue..." && read fackEnterKey; }
+function title { clear && echo "${title}" && wait; }
+
+function myip(){
+  ipE="$(ip addr show eth0 |grep inet |awk '{ print $2; }' |sed 's/\/.*$//' | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}' )";
+  ipW="$(curl -4 icanhazip.com)";
+  ipH=$(hostname -I|cut -f1 -d ' ');
+
+  if [ "$ipE" == "$ipW" ]; then myip="$ipE";
+  elif [ "$ipH" == "$ipW" ]; then myip="$ipH";
+  elif [ "$ipH" == "$ipE" ]; then myip="$ipW";
+  fi;
+  echo "${myip}";
+}
+function TIMER() {
+  if [[ "$1" =~ ^[[:digit:]]+$ ]]; then
+    T="$1"; else T="3";
+  fi;
+  SE="$((1 * ${T}))" && SC='\033[0K\r';
+  while [ $SE -gt 0 ]; do
+    echo -ne "\t $SE$SC";
+    sleep 1 && : $((SE--));
+  done;
+}
+function DATA() { DATA=$(date +%Y-%m-%d_%k%M%S) && echo "$DATA"; }
+
+
+
 #Welcome message
 clear
 echo -e "Welcome to WordPress & LAMP stack installation and configuration wizard!
 First of all, we going to check all required packeges..."
 
-#Checking packages
-echo -e "${YELLOW}Checking packages...${NC}"
-echo -e "List of required packeges: nano, zip, unzip, mc, htop, fail2ban, apache2 & php, mysql, php curl, phpmyadmin, wget, curl"
 
-#read -r -p "Do you want to check packeges? [y/N] " response
-echo -e "Check packeges.. "; response='y'
+
+#Checking packages
+echo -e "${YELLOW}List of required packeges: nano, zip, unzip, mc, htop, fail2ban, apache2 & php, mysql, php curl, phpmyadmin, wget, curl ${NC}"
+ASK=$( echo -e "${YELLOW}Do you want to check packeges? [y/N] ${NC}";)
+read -r -p "Do you want to check packeges?  [y/N] " response
 
 case $response in
     [yY][eE][sS]|[yY]) 

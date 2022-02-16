@@ -10,11 +10,11 @@
 #      VARIABLE & Function
 # -------------------------------------
 
-function OSrelease {
+function TypeOS {
 
   OS="$(cat /etc/*release |grep '^ID=' |sed 's/"//g' |awk -F= '{print $2 }' )";
   release="$(cat /etc/*release |grep '^VERSION_ID=' |sed  's/"//g' |awk -F= '{print $2 }' )";
-}; OSRel
+}; TypeOS
 
 function wait() { echo -en "\n\tress [ANY] key to continue..." && read -s -n 1; }
 function pause() { echo -en "\n\tPress [ENTER] key to continue..." && read fackEnterKey; }

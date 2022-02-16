@@ -575,22 +575,29 @@ echo -e "${GREEN}Services succesfully restarted!${NC}"
 sleep 3
 
 echo -e "${GREEN}Adding user & database for WordPress, setting wp-config.php...${NC}"
-echo -e "Please, set username for database: "
-read db_user
-echo -e "Please, set password for database user: "
-read db_pass
+# echo -e "Please, set username for database: ";
+# read db_user
+# echo -e "Please, set password for database user: "
+# read db_pass
+
+db_name=$(echo ${websitename} | tr "." "_" | tr "-" "_")
+Host=\'%\'
+
+db_pass=$(date +%s|sha256sum|base64|head -c 25)
+
+
 
 mysql -u root -p <<EOF
-CREATE USER '$db_user'@'localhost' IDENTIFIED BY '$db_pass';
-CREATE DATABASE IF NOT EXISTS $db_user;
-GRANT ALL PRIVILEGES ON $db_user.* TO '$db_user'@'localhost';
-ALTER DATABASE $db_user CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE USER '$db_user'@'$Host' IDENTIFIED BY '$db_pass';
+CREATE DATABASE IF NOT EXISTS $db_name;
+GRANT ALL PRIVILEGES ON $db_name.* TO '$db_user'@'$Host';
+ALTER DATABASE $db_name CHARACTER SET utf8 COLLATE utf8_general_ci;
 EOF
 
 cat >/var/www/$username/$websitename/www/wp-config.php <<EOL
 <?php
 
-define('DB_NAME', '$db_user');
+define('DB_NAME', '$db_name');
 
 define('DB_USER', '$db_user');
 

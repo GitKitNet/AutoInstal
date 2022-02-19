@@ -4,7 +4,7 @@
 #	 Script to confiruge Server, WebServer and WordPress
 #==========================================================
 
-
+# bash <(curl -fLsS https://raw.githubusercontent.com/numbnet/AutoInstall/master/wp/wpca.sh)
 
 
 #----------------------------------------------------------
@@ -22,7 +22,7 @@ function THIS() {
   clear
   echo -e -n "\n\t${YELLOW}Do you want Run THIS script [y/N] .? ${NC}" && read -e syn
   case $syn in
-  [Yy]* ) clear && echo -e -n "\t ${YELLOW}Run THIS script ! ${NC}\n\n"; sleep 5 && break ;;
+  [Yy]* ) clear && echo -e -n "\t ${GREEN}THIS script is Run ! ${NC}\n\n"; sleep 5 && break ;;
   [Nn]* ) echo -e "${RED}Cancel..${NC}"; exit 0 ;;
   esac
  done

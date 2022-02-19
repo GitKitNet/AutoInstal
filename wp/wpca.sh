@@ -102,9 +102,13 @@ APACHE2=$(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok install
 
 MYSQL-SERVER=$(dpkg-query -W -f='${Status}' mysql-server 2>/dev/null | grep -c "ok installed")
 	if [ "$MYSQL-SERVER" -eq 0 ]; then
-		echo -e "${YELLOW}Installing mysql-server${NC}" && apt-get install mysql-server --yes;
+		echo -e "${YELLOW}Installing mysql-server${NC}"
+		if [ ! -x /usr/bin/mysql ]; then 
+			apt-get install mysql-server --yes && systemctl start mysql;
+		fi;
 	elif [ "$MYSQL-SERVER" -eq 1 ]; then
 		echo -e "${GREEN}mysql-server	- is installed!${NC}"
+		systemctl start mysql || systemctl restart mysql
 	fi
 
 PHP5-CURL=$(dpkg-query -W -f='${Status}' php5-curl 2>/dev/null | grep -c "ok installed")
@@ -595,7 +599,10 @@ EOL
 a2dismod status
 echo -e "${GREEN}Configuration of apache mods was succesfully finished! \nRestarting Apache & MySQL services...${NC}"
 service apache2 restart
-service mysql restart
+service mysql restart || systemctl restart mysql && systemctl enable mysql
+service mysql start && service mysql enable
+
+
 echo -e "${GREEN}Services succesfully restarted!${NC}"
 sleep 3
 

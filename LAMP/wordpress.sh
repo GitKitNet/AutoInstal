@@ -70,6 +70,8 @@ read -r -p "Do you want to check packeges?  [y/N] " response
 case $response in
     [yY][eE][sS]|[yY]) 
 
+apt-get upgrade --yes && apt-get update --yes;
+
 NANO=$(dpkg-query -W -f='${Status}' nano 2>/dev/null | grep -c "ok installed")
   if [ $(dpkg-query -W -f='${Status}' nano 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
     echo -e "${YELLOW}Installing nano${NC}"

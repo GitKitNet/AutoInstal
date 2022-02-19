@@ -10,19 +10,32 @@
 #----------------------------------------------------------
 # Colors settings
 #----------------------------------------------------------
-BLUE='\033[0;34m'					 # Blue
-GREEN='\033[0;32m'					# Green
-RED='\033[0;31m'						# RED
-YELLOW='\033[0;33m'				 # YELLOW
-NC='\033[0m'								# No Color
+BLUE='\033[0;34m'       			# Blue
+GREEN='\033[0;32m'      			# Green
+RED='\033[0;31m'        			# RED
+YELLOW='\033[0;33m'     			# YELLOW
+NC='\033[0m'            			# No Color
 
 
-#Welcome message
+function THIS() {
+ while true; do
+  clear
+  echo -e -n "\n\t${YELLOW}Do you want Run THIS script [y/N] .? ${NC}" && read -e syn
+  case $syn in
+  [Yy]* ) clear && echo -e -n "\t ${YELLOW}Run THIS script ! ${NC}\n\n"; sleep 5 && break ;;
+  [Nn]* ) echo -e "${RED}Cancel..${NC}"; exit 0 ;;
+  esac
+ done
+}; THIS
+
+
+#================================
+#        Welcome message
+#================================
 clear
 echo -e "Welcome to WordPress & LAMP stack installation and configuration wizard!
 First of all, we going to check all required packeges..."
 sleep 5
-
 
 
 #================================

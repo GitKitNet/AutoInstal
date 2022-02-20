@@ -78,81 +78,81 @@ NANO=$(dpkg-query -W -f='${Status}' nano 2>/dev/null | grep -c "ok installed")
 		echo -e "${YELLOW}Installing nano${NC}" && apt-get install nano --yes;
 	elif [ "$NANO" -eq 1 ]; then
 		echo -e "${GREEN}nano	- is installed!${NC}"
-	fi
+	fi; sleep 1
 
 ZIP=$(dpkg-query -W -f='${Status}' zip 2>/dev/null | grep -c "ok installed")
 	if [ "$ZIP" -eq 0 ]; then
 		echo -e "${YELLOW}Installing zip${NC}" && apt-get install zip --yes;
 	elif [ "$ZIP" -eq 1 ]; then
 		echo -e "${GREEN}zip	- is installed!${NC}"
-	fi
+	fi; sleep 1
 
 MC=$(dpkg-query -W -f='${Status}' mc 2>/dev/null | grep -c "ok installed")
 	if [ "$MC" -eq 0 ]; then
 		echo -e "${YELLOW}Installing mc${NC}" && apt-get install mc --yes;
 	elif [ "$MC" -eq 1 ]; then
 		echo -e "${GREEN}mc	- is installed!${NC}"
-	fi
+	fi; sleep 1
 
 HTOP=$(dpkg-query -W -f='${Status}' htop 2>/dev/null | grep -c "ok installed")
 	if [ "$HTOP" -eq 0 ]; then
 		echo -e "${YELLOW}Installing htop${NC}" && apt-get install htop --yes;
 	elif [ "$HTOP" -eq 1 ]; then
 		echo -e "${GREEN}htop	- is installed!${NC}"
-	fi
+	fi; sleep 1
 
 FAIL2BAN=$(dpkg-query -W -f='${Status}' fail2ban 2>/dev/null | grep -c "ok installed")
 	if [ "$FAIL2BAN" -eq 0 ]; then
 		echo -e "${YELLOW}Installing fail2ban${NC}" && apt-get install fail2ban --yes;
 	elif [ "$FAIL2BAN" -eq 1 ]; then
 		echo -e "${GREEN}fail2ban	- is installed!${NC}"
-	fi
+	fi; sleep 1
 
 APACHE2=$(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok installed")
 	if [ "$APACHE2" -eq 0 ]; then
 		echo -e "${YELLOW}Installing apache2${NC}" && apt-get install apache2 php5 --yes;
 	elif [ "$APACHE2" -eq 1 ]; then
-		echo -e "${GREEN}apache2	- is installed!${NC}"
-	fi
+		echo -e "${GREEN}apache2\t- is installed!${NC}"
+	fi; sleep 1
 
-MYSQL-SERVER=$(dpkg-query -W -f='${Status}' mysql-server 2>/dev/null | grep -c "ok installed")
-	if [ "$MYSQL-SERVER" -eq 0 ]; then
+MYSQLSERVER=$(dpkg-query -W -f='${Status}' mysql-server 2>/dev/null | grep -c "ok installed")
+	if [ "$MYSQLSERVER" -eq 0 ]; then
 		echo -e "${YELLOW}Installing mysql-server${NC}"
-		if [ ! -x /usr/bin/mysql ]; then 
-			apt-get install mysql-server --yes && systemctl start mysql;
+		if [ ! -x /usr/bin/mysql ]; then apt-get install mysql-server --yes && systemctl start mysql;
 		fi;
-	elif [ "$MYSQL-SERVER" -eq 1 ]; then
+	elif [ "$MYSQLSERVER" -eq 1 ]; then
 		echo -e "${GREEN}mysql-server	- is installed!${NC}"
 		systemctl start mysql || systemctl restart mysql
-	fi
+	fi; sleep 1
 
 PHP5-CURL=$(dpkg-query -W -f='${Status}' php5-curl 2>/dev/null | grep -c "ok installed")
 	if [ "$PHP5-CURL" -eq 0 ]; then
 		echo -e "${YELLOW}Installing php5-curl${NC}" && apt-get install php5-curl --yes;
 	elif [ "$PHP5-CURL" -eq 1 ]; then
 		echo -e "${GREEN}php5-curl	- is installed!${NC}"
-	fi
+	fi; sleep 1
 
 PHPMYADMIN=$(dpkg-query -W -f='${Status}' phpmyadmin 2>/dev/null | grep -c "ok installed")
 	if [ "$PHPMYADMIN" -eq 0 ]; then
 		echo -e "${YELLOW}Installing phpmyadmin${NC}" && apt-get install phpmyadmin --yes;
 	elif [ "$PHPMYADMIN" -eq 1 ]; then
 		echo -e "${GREEN}phpmyadmin	- is installed!${NC}"
-	fi
+	fi; sleep 1
 
 WGET=$(dpkg-query -W -f='${Status}' wget 2>/dev/null | grep -c "ok installed")
 	if [ "$WGET" -eq 0 ]; then
 		echo -e "${YELLOW}Installing wget${NC}" && apt-get install wget --yes;
 	elif [ "$WGET" -eq 1 ]; then
 		echo -e "${GREEN}wget	- is installed!${NC}"
-	fi
+	fi; sleep 1
 
 CURL=$(dpkg-query -W -f='${Status}' curl 2>/dev/null | grep -c "ok installed")
 	if [ "$CURL" -eq 0 ]; then
 		echo -e "${YELLOW}Installing curl${NC}" && apt-get install curl --yes;
 	elif [ "$CURL" -eq 1 ]; then
 		echo -e "${GREEN}curl	- is installed!${NC}"
-	fi
+	fi; sleep 1
+        echo "=====  End Check package   ====="; sleep 1
 
 }
 
@@ -171,59 +171,60 @@ esac
 #   phpmyadmin default path change
 #-----------------------------------
 function Chang_phpMyAdmin() {
-echo -e "${YELLOW}Changing phpMyAdmin default path from /phpMyAdmin to /phpmyadmin...${NC}"
+  echo -e "${YELLOW}Changing phpMyAdmin default path from /phpMyAdmin to /phpmyadmin...${NC}"
 
-cat >/etc/phpmyadmin/apache.conf <<EOL
-# phpMyAdmin default Apache configuration
+  cat >/etc/phpmyadmin/apache.conf <<EOL
+## phpMyAdmin default Apache configuration
 
 Alias /phpmyadmin /usr/share/phpmyadmin
 
 <Directory /usr/share/phpmyadmin>
-		Options FollowSymLinks
-		DirectoryIndex index.php
+	Options FollowSymLinks
+	DirectoryIndex index.php
 
-		<IfModule mod_php5.c>
-				<IfModule mod_mime.c>
-						AddType application/x-httpd-php .php
-				</IfModule>
-				<FilesMatch ".+\.php$">
-						SetHandler application/x-httpd-php
-				</FilesMatch>
-
-				php_flag magic_quotes_gpc Off
-				php_flag track_vars On
-				php_flag register_globals Off
-				php_admin_flag allow_url_fopen Off
-				php_value include_path .
-				php_admin_value upload_tmp_dir /var/lib/phpmyadmin/tmp
-				php_admin_value open_basedir /usr/share/phpmyadmin/:/etc/phpmyadmin/:/var/lib/phpmyadmin/:/usr/share/php/php-gettext/:/usr/share/javascript/:/usr/share/php/tcpdf/
+	<IfModule mod_php5.c>
+		<IfModule mod_mime.c>
+			AddType application/x-httpd-php .php
 		</IfModule>
+		<FilesMatch ".+\.php$">
+			SetHandler application/x-httpd-php
+		</FilesMatch>
+
+		php_flag magic_quotes_gpc Off
+		php_flag track_vars On
+		php_flag register_globals Off
+		php_admin_flag allow_url_fopen Off
+		php_value include_path .
+		php_admin_value upload_tmp_dir /var/lib/phpmyadmin/tmp
+		php_admin_value open_basedir /usr/share/phpmyadmin/:/etc/phpmyadmin/:/var/lib/phpmyadmin/:/usr/share/php/php-gettext/:/usr/share/javascript/:/usr/share/php/tcpdf/
+	</IfModule>
 
 </Directory>
 
 # Authorize for setup
 <Directory /usr/share/phpmyadmin/setup>
-		<IfModule mod_authz_core.c>
-				<IfModule mod_authn_file.c>
-						AuthType Basic
-						AuthName "phpMyAdmin Setup"
-						AuthUserFile /etc/phpmyadmin/htpasswd.setup
-				</IfModule>
-				Require valid-user
+	<IfModule mod_authz_core.c>
+		<IfModule mod_authn_file.c>
+			AuthType Basic
+			AuthName "phpMyAdmin Setup"
+			AuthUserFile /etc/phpmyadmin/htpasswd.setup
 		</IfModule>
+
+		Require valid-user
+
+	</IfModule>
 </Directory>
 
 # Disallow web access to directories that don't need it
 <Directory /usr/share/phpmyadmin/libraries>
-		Require all denied
+	Require all denied
 </Directory>
 <Directory /usr/share/phpmyadmin/setup/lib>
-		Require all denied
+	Require all denied
 </Directory>
 EOL
 
 echo -e "${GREEN}Path was succesfully changed/\nNew phpMyAdmin path is: /phpmyadmin (i.e.: yourwebsite.com/phpmyadmin)${NC}"
-
 
 }
 
@@ -233,8 +234,8 @@ read -r -p "Do you want to change default phpMyAdmin path to /phpMyAdmin? [y/N] 
 echo -e "Default phpMyAdmin path to /phpMyAdmin? [y/N] " && response=y;
 
 case $response in
-		[yY][eE][sS]|[yY]) Chang_phpMyAdmin	;;
-		*) echo -e "${RED}Path was not changed!${NC}" ;;
+	[yY][eE][sS]|[yY]) Chang_phpMyAdmin	;;
+	*) echo -e "${RED}Path was not changed!${NC}" ;;
 esac
 
 
@@ -268,53 +269,46 @@ echo -e "${YELLOW}Now we going to configure apache2 for your domain name & websi
 
 	cat >/etc/apache2/sites-available/$domain.conf <<EOL
 	<VirtualHost *:80>
-				ServerAdmin $domain_email
-				ServerName $domain
-				ServerAlias www.$domain
-				DocumentRoot /var/www/$domain/
-				<Directory />
-								Options +FollowSymLinks
-								AllowOverride All
-				</Directory>
-				<Directory /var/www/$domain>
-								Options -Indexes +FollowSymLinks +MultiViews
-								AllowOverride All
-								Order allow,deny
-								allow from all
-				</Directory>
+		ServerAdmin $domain_email
+		ServerName $domain
+		ServerAlias www.$domain
+		DocumentRoot /var/www/$domain/
+	<Directory />
+		Options +FollowSymLinks
+		AllowOverride All
+	</Directory>
 
-				ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
-				<Directory "/usr/lib/cgi-bin">
-								AllowOverride None
-								Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
-								Order allow,deny
-								Allow from all
-				</Directory>
+	<Directory /var/www/$domain>
+		Options -Indexes +FollowSymLinks +MultiViews
+		AllowOverride All
+		Order allow,deny
+		allow from all
+	</Directory>
 
-				ErrorLog ${APACHE_LOG_DIR}/error.log
+	ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
 
-				# Possible values include: debug, info, notice, warn, error, crit,
-				# alert, emerg.
-				LogLevel warn
+	<Directory "/usr/lib/cgi-bin">
+		AllowOverride None
+		Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+		Order allow,deny
+		Allow from all
+	</Directory>
 
-				CustomLog ${APACHE_LOG_DIR}/access.log combined
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+
+	# Possible values include: debug, info, notice, warn, error, crit,
+	# alert, emerg.
+	LogLevel warn
+
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 EOL
+
 	a2dissite 000-default
-		a2ensite $domain
-		service apache2 restart
-		P_IP="`wget http://ipinfo.io/ip -qO -`"
-
-		echo -e "${GREEN}Apache2 config was updated!
-		New config file was created: /etc/apache2/sites-available/$domain.conf
-		Domain was set to: $domain
-		Admin email was set to: $domain_email
-		Root folder was set to: /var/www/$domain
-		Option Indexes was set to: -Indexes (to close directory listing)
-		Your server public IP is: $P_IP (Please, set this IP into your domain name 'A' record)
-		Website was activated & apache2 service reloaded!
-		${NC}"
-
+	a2ensite $domain
+	service apache2 restart
+	P_IP="`wget http://ipinfo.io/ip -qO -`"
+	echo -e "${GREEN}Apache2 config was updated! \nNew config file was created: /etc/apache2/sites-available/$domain.conf \nDomain was set to: $domain \n Admin email was set to: $domain_email \n Root folder was set to: /var/www/$domain \nOption Indexes was set to: -Indexes (to close directory listing)\nYour server public IP is: $P_IP (Please, set this IP into your domain name 'A' record) \nWebsite was activated & apache2 service reloaded! ${NC}"
 }
 
 read -r -p "Do you want to CONFIGURE APACHE2 automatically? [y/N] " response
@@ -329,8 +323,7 @@ esac
 #-----------------------------------
 #downloading WordPress, unpacking, adding basic pack of plugins, creating .htaccess with optimal & secure configuration
 echo -e "${YELLOW}On this step we going to download latest version of WordPress with EN or RUS language, set optimal & secure configuration and add basic set of plugins...${NC}"
-
-read -r -p "Do you want to install WordPress & automatically set optimal and secure configuration with basic set of plugins? [y/N] " response
+read -r -p "Do you want to install WordPress & automatically configuration with basic set of plugins? [y/N] " response
 case $response in
 	[yY][eE][sS]|[yY]) 
 
@@ -373,7 +366,6 @@ Now we going to download some useful plugins:
 --------------------------------------------
 ";
 	sleep 3
-	
 	#------------
 	SITEMAP="`curl https://wordpress.org/plugins/google-sitemap-generator/ | grep https://downloads.wordpress.org/plugin/google-sitemap-generator.*.*.*.zip | awk '{print $3}' | sed -ne 's/.*\(http[^"]*.zip\).*/\1/p'`"
 	wget $SITEMAP -O /tmp/sitemap.zip;
@@ -626,14 +618,18 @@ echo -e "${GREEN}Adding user & database for WordPress, setting wp-config.php...$
 # echo -e "Please, set username for database: " && read db_user
 # echo -e "Please, set password for database user: " && read db_pass
 
-#mysql -u root -p <<EOF
-#CREATE USER '$db_user'@${Host} IDENTIFIED BY '$db_pass';
-#CREATE DATABASE IF NOT EXISTS $db_user;
-#GRANT ALL PRIVILEGES ON $db_user.* TO '$db_user'@${Host};
-#ALTER DATABASE $db_user CHARACTER SET utf8 COLLATE utf8_general_ci;
-#EOF
-################################
-echo "--Reusing credentials----------------------"
+#===============================
+# 
+# mysql -u root -p <<EOF
+# CREATE USER '$db_user'@${Host} IDENTIFIED BY '$db_pass';
+# CREATE DATABASE IF NOT EXISTS $db_user;
+# GRANT ALL PRIVILEGES ON $db_user.* TO '$db_user'@${Host};
+# ALTER DATABASE $db_user CHARACTER SET utf8 COLLATE utf8_general_ci;
+# EOF
+# 
+#===============================
+
+echo "Reusing credentials" && sleep 3
 $authorization -e "
 CREATE USER 'root'@${Host} IDENTIFIED BY '${db_pass}';
 GRANT ALL PRIVILEGES ON *.* TO 'root'@${Host} WITH GRANT OPTION;
@@ -669,13 +665,9 @@ cat >/var/www/$domain/wp-config.php <<EOL
 <?php
 
 define('DB_NAME', '$db_user');
-
 define('DB_USER', '$db_user');
-
 define('DB_PASSWORD', '$db_pass');
-
 define('DB_HOST', 'localhost');
-
 define('DB_CHARSET', 'utf8');
 
 define('DB_COLLATE', '');
@@ -722,6 +714,6 @@ ____________________________________________________
 ====================================================
 Connect DB: mysql -h 127.0.0.1 -u root -p${db_pass}
 ====================================================
-" >> /tmp/credentials.txt
-cat /tmp/credentials.txt
+" >> /root/.credentials.txt
+cat /root/.credentials.txt
 echo -e "Installation & configuration succesfully finished."

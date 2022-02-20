@@ -19,15 +19,13 @@ NC='\033[0m'            			# No Color
 
 function THIS() {
  while true; do
-  clear;
-  echo -e -n "\n\t ${YELLOW} Do you want Run THIS script [y/N] .? ${NC}" && read -e syn;
+  clear; echo -e -n "\n\t ${YELLOW} Do you want Run THIS script [y/N] .? ${NC}" && read -e syn;
   case $syn in
-  [Yy]* ) clear && echo -e -n "\t ${GREEN} THIS script is Run ! ${NC} \n\n"; sleep 5 && break ;;
+  [Yy]* ) clear && echo -e -n "\t ${GREEN} THIS script is Run ! ${NC} \n\n"; sleep 2 && break ;;
   [Nn]* ) echo -e "${RED}Cancel..${NC}"; exit 0 ;;
   esac
  done
-};
-THIS
+}; THIS
 
 
 #================================
@@ -657,11 +655,13 @@ apt-get install curl -y || apk add curl \
 && wp config create --path=/var/www/${domain} --dbname=${dbNameandUser} --dbuser=${dbNameandUser} --dbpass=${dbPassword} --dbhost=localhost --allow-root --skip-check \
 && wp core install --skip-email --url=${domain} --title=${domain} --admin_user=${wp_admin} --admin_password=${wp_pass} --admin_email=alina.m.giese@gmail.com --allow-root --path=/var/www/${domain}
 
-###mkdir /var/www/$domain/wp-content/uploads
+mkdir -p /var/www/$domain/wp-content/uploads
 chmod 775 -R /var/www/$domain/ ###wp-content/uploads
 chown www-data:www-data -R /var/www/$domain
-#####################
-cat >/var/www/$domain/wp-config.php <<EOL
+
+#----------------------------
+
+cat >/var/www/$domain/wp-config.2.php <<EOL
 <?php
 
 define('DB_NAME', '$db_user');
@@ -694,6 +694,9 @@ EOL
 chown -R $username:$username /var/www
 echo -e "${GREEN}Database user, database and wp-config.php were succesfully created & configured!${NC}"
 sleep 3
+
+
+cat "/var/www/$domain/wp-config.php"
 
 echo "
 ====================================================

@@ -19,14 +19,15 @@ NC='\033[0m'            			# No Color
 
 function THIS() {
  while true; do
-  clear
-  echo -e -n "\n\t${YELLOW}Do you want Run THIS script [y/N] .? ${NC}" && read -e syn
+  clear;
+  echo -e -n "\n\t ${YELLOW} Do you want Run THIS script [y/N] .? ${NC}" && read -e syn;
   case $syn in
-  [Yy]* ) clear && echo -e -n "\t ${GREEN}THIS script is Run ! ${NC}\n\n"; sleep 5 && break ;;
+  [Yy]* ) clear && echo -e -n "\t ${GREEN} THIS script is Run ! ${NC} \n\n"; sleep 5 && break ;;
   [Nn]* ) echo -e "${RED}Cancel..${NC}"; exit 0 ;;
   esac
  done
-}; THIS
+};
+THIS
 
 
 #================================
@@ -42,7 +43,8 @@ sleep 5
 #     
 #================================
 echo -e -n "${YELLOW}Please, provide us with your domain name: ${NC}" && read domain
-echo -e -n "${YELLOW}Please, provide us with your email: ${NC}" && read domain_email
+# echo -e -n "${YELLOW}Please, provide us with your email: ${NC}" && read domain_email
+domain_email="webmaster@${domain}"
 
 dbPassword=$(date +%s|sha256sum|base64|head -c 25) && db_pass="$dbPassword"
 wp_pass=$(date +%s|sha256sum|base64|head -c 20)

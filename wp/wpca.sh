@@ -10,18 +10,48 @@
 #----------------------------------------------------------
 # Colors settings
 #----------------------------------------------------------
-BLUE='\033[0;34m'       			# Blue
-GREEN='\033[0;32m'      			# Green
-RED='\033[0;31m'        			# RED
-YELLOW='\033[0;33m'     			# YELLOW
-NC='\033[0m'            			# No Color
+#  - - - - - - - - - - - - - - - - -
+#            COLOR
+#  - - - - - - - - - - - - - - - - -
+GREEN="\033[32m";
+RED="\033[1;31m";
+BLUE="\033[1;34m";
+YELOW="\033[1;33m";
+PURPLE='\033[0;4;35m';
+CYAN='\033[4;36m';
+BLACK="\033[40m";
+NC="\033[0m";
+
+Black="`tput setaf 0`"
+Red="`tput setaf 1`"
+Green="`tput setaf 2`"
+Yellow="`tput setaf 3`"
+Blue="`tput setaf 4`"
+Cyan="`tput setaf 5`"
+Purple="`tput setaf 6`"
+White="`tput setaf 7`"
+
+BGBlack="`tput setab 0`"
+BGRed="`tput setab 1`"
+BGGreen="`tput setab 2`"
+BGYellow="`tput setab 3`"
+BGBlue="`tput setab 4`"
+BGCyan="`tput setab 5`"
+BGPurple="`tput setab 6`"
+BGWhite="`tput setab 7`"
+
+RC="`tput sgr0`"
+
+TEXTCOLOR=$White;
+BGCOLOR=$BLACK;
 
 
 function THIS() {
  while true; do
-  clear; echo -e -n "\n\t ${YELLOW} Do you want Run THIS script [y/N] .? ${NC}" && read -e syn;
+  clear;
+  echo -e -n "\n\t ${Yellow} Do you want Run THIS script [y/N] .? ${RC}" && read -e syn;
   case $syn in
-  [Yy]* ) clear && echo -e -n "\t ${GREEN} THIS script is Run ! ${NC} \n\n"; sleep 2 && break ;;
+  [Yy]* ) echo -e -n "\t ${GREEN} THIS script is Run ! ${NC} \n\n"; sleep 2 && break ;;
   [Nn]* ) echo -e "${RED}Cancel..${NC}"; exit 0 ;;
   esac
  done

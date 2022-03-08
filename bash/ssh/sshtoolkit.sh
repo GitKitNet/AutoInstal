@@ -3,7 +3,7 @@
 # set +x
 
 # bash <(curl -L -fSs )
-# bash -c "$(curl -L -fSs || wget -O - )"
+# bash -c "$(curl -L -fSs raw.githubusercontent.com/numbnet/AutoInstall/master/bash/ssh/sshtoolkit.sh || wget -O - raw.githubusercontent.com/numbnet/AutoInstall/master/bash/ssh/sshtoolkit.sh)"
 
 
 function sshkeygen() {

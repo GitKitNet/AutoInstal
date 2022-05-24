@@ -5,9 +5,7 @@
 # bash <(curl -L -fSs raw.githubusercontent.com/numbnet/AutoInstall/master/bash/ssh/sshtoolkit.sh)
 # bash -c "$(curl -L -fSs raw.githubusercontent.com/numbnet/AutoInstall/master/bash/ssh/sshtoolkit.sh || wget -O - raw.githubusercontent.com/numbnet/AutoInstall/master/bash/ssh/sshtoolkit.sh)"
 
-
-function sshkeygen() {
-title="Generate SSH Key";
+title="EXAMPLE MAIN MENU";
 
 #  - - - - - - - - - - - - - - - - -
 #            COLOR
@@ -69,13 +67,29 @@ function THIS() {
   [Nn]* ) echo -e "${RED}Cancel..${NC}"; exit 0 ;;
   esac
  done
-}; 
-THIS
+}; THIS
 
 
 
+function F1() {
+ while true; do
+  read -e -p "Do you want RUN test [y/N] .? " syn
+  case $syn in
+  [Yy]* ) echo -en "\n${GREEN}=========";pause && break ;;
+  [Nn]* ) break ;;
+  esac
+ done
+}
+function title() { clear; echo "${title} ${TKEY}"; }
+function pause() { read -p "Press [Enter] key to continue..." fackEnterKey; }
+function wait() { read -p "Press [ANY] key to continue..? " -s -n 1; }
+function TIMER() { if [[ "$1" =~ ^[[:digit:]]+$ ]]; then T="$1"; else T="5"; fi; SE="\033[0K\r"; E="$((1 * ${T}))"; while [ $E -gt 0 ]; do echo -en " Please wait: ${RED}$E$SE${NC}" && sleep 1 && : $((E--)); done; }
 
-#figlet -f smslant SSH Toolkit;
+function RUNING() {
+
+
+# figlet -f smslant SSH Toolkit;
+# -------------------------------
 function showBanner() {
 clear;
 echo -e "
@@ -88,68 +102,12 @@ ${BLUE}_______________${NC}${GREEN}_______________________________${NC}
 ";
 }
 
-function LoockUP() {
- while true; do
-  read -e -p "Do you want Look UP SSH keys [y/N] .? " syn
-  case $syn in
-  [Yy]* ) clear;
-   echo -en "\n${GREEN}=======================\n==    INFORMATION    ==\n=======================";
-   echo -en "\n${GREEN}NAME:     ${NC}${Yellow}${kName}";
-   echo -en "\n${GREEN}PUBLIC:   ${NC}${Yellow}" && cat "$HOME/.ssh/${kName}.pub"
-   echo -en "\n${GREEN}PRIVAT:   ${NC}${YELLOW}" && cat "$HOME/.ssh/${kName}";
-   echo -en "\n${GREEN}=======================${NC}\n";
-   pause && break ;;
-  [Nn]* ) echo -e "${RED}Cancel..${NC}"; break ;;
-  esac
- done
-}
 
-function ConvertPPK() {
-OS="$( cat /etc/*release |grep '^ID=' | awk -F= '{print $2 }' )";
+#================================
+#           Main MENU
+#================================
 
- while true; do
- read -e -p "Do you want PuTTy file ${kName}.ppk [y/N] ..? " syn
- case $syn in
-  [Yy]* ) echo -en "\n${YELLOW}Install PuTTy and Converted to *.PPK ${NC}";
-    if [[ "$OS" == arch ]]; then pacman -S putty;
-      elif [[ "$OS" == centos ]] && [[ "$OS" == rhell ]]; then yum install putty -y;
-      elif [[ "$OS" == fedora ]]; then dnf install putty -y;
-      elif [[ "$OS" == ubuntu ]]; then apt-get install putty-tools -y;
-    fi;
-   if [[ -f "$HOME/.ssh/${kName}" ]]; then echo -en "\n${GREEN}SSH Key Exist\n ${NC}"; puttygen ${kName} -o ${kName}.ppk; else echo "SSH key Not Exist"; fi ;;
-  [Nn]* ) echo -e "${RED}Cancel..${NC}"; break ;;
-  esac;
- done
-}
-
-
-function title() { clear; echo "${title} ${TKEY}"; }
-function pause() { read -p "Press [Enter] key to continue..." fackEnterKey; }
-function wait() { read -p "Press [ANY] key to continue..? " -s -n 1; }
-function TIMER() { if [[ "$1" =~ ^[[:digit:]]+$ ]]; then T="$1"; else T="5"; fi; SE="\033[0K\r"; E="$((1 * ${T}))"; while [ $E -gt 0 ]; do echo -en " Please wait: ${RED}$E$SE${NC}" && sleep 1 && : $((E--)); done; }
-function AddON() { 
-  while true; do read -e -p "Do you want RUN Agent? [y/N] ?" ryn; case $ryn in [Yy]* ) clear; eval $(ssh-agent) && ssh-add -D; break ;; [Nn]* ) break;; esac; done
-  while true; do  read -e -p "Do you want add key to SSH Agent? [y/N]" ayn; case $ayn in [Yy]* ) local -r kName="$1"; ssh-add "$HOME/.ssh/$kName" ;; [Nn]* ) break;; esac; done
-  while true; do read -e -p "Add to authorized_key? [y/N]" uyn; case $uyn in [Yy]* ) cat "$HOME/.ssh/${kName}.pub" >> "$HOME/.ssh/authorized_keys" ;; [Nn]* ) break;; esac; done;
-}
-
-function OnRUN() {
-  title;
-  read -e -p "Enter NAME ssh key: " IDK && ID="$( echo ${IDK} | sed 's/ /_/g' )";
-  read -e -p "Add comment: " COMENT && COM="$( echo ${COMENT} | sed 's/ /./g' )";
-  read -e -p "Enter password: " PASS;
-
-  if [ -z "${ID}" ]; then ID="${hostname}_${USER}" && echo "${ID}"; else echo "${ID}"; fi
-  if [ -z "${COM}" ]; then COM="${USER}"@"$( echo ${IDK} | sed 's/ /./g' )"; else echo "${COM}"; fi;
-
-  kName="id_${TKEY}_$( echo ${ID} | sed 's/ /_/g' ).key";
-  ssh-keygen -t ${TKEY} -f $HOME/.ssh/${kName} -C "${COM}" -N "$PASS";
-  ConvertPPK ;
-  LoockUP ;
-}
-
-#====  MENU
-function BOSSMENU() {
+function MAINMENU() {
  echo -e -n "\n\t${GREEN}==== MENU OPTIONS ====${NC}\n"
  echo -e -n "${BLUE}
 \t1. Create SSH key ${NC}
@@ -174,12 +132,12 @@ ${RED}\n\t0. Back ${NC}\n";
 
 ##   subMENU 2
 function SUBMENUTWO() {
-echo -e -n "\n\t ${GREEN}SubMENU 2 OPTIONS:${NC} \n"
-echo -e -n "
+    echo -e -n "\n\t ${GREEN}SubMENU 2 OPTIONS:${NC} \n"
+    echo -e -n "
 \t1. MENU 2 SubMenu 1
 \t2. MENU 2 SubMenu 2
-\t3. MENU 2 SubMenu 3
-${RED}\n\t0. Back ${NC}\n";
+\t3. MENU 2 SubMenu 3    ${RED}
+\n\t0. Back              ${NC}\n";
 } 
 
 ##   subMENU 3
@@ -196,7 +154,8 @@ ${RED}\n\t0. Back ${NC}\n";
 while :
 do
 showBanner
-BOSSMENU
+
+MAINMENU
 echo -n -e "\n\tSelection: "
 read -n1 opt
 a=true;
@@ -207,6 +166,7 @@ case $opt in
 while :
 do
 showBanner
+
 SUBMENUONE
 echo -n -e "\n\tSelection: "
 read -n1 opt;
@@ -264,7 +224,10 @@ esac
 done
 echo "Quit...";
 clear;
-}; 
-sshkeygen
+
+
+
+};
+RUNING
 
 # exit 1

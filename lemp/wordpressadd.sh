@@ -1,4 +1,8 @@
 #!/bin/bash
+
+GETLINK_A='https://raw.githubusercontent.com/bajpangosh/KLOUDBOY-LEMP-Stack/master/php7default'
+GETLINK_B='https://raw.githubusercontent.com/bajpangosh/KLOUDBOY-LEMP-Stack/master/nginx.conf'
+
 # GET ALL USER INPUT
 echo "Domain Name (eg. example.com)?"
 read DOMAIN
@@ -17,7 +21,7 @@ sudo apt install unzip -y
 echo "Sit back and relax :) ......"
 sleep 2;
 cd /etc/nginx/sites-available/
-wget -O "$DOMAIN" https://goo.gl/udxAwB
+wget -O "$DOMAIN" ${GETLINK_A}
 sed -i -e "s/example.com/$DOMAIN/" "$DOMAIN"
 sed -i -e "s/www.example.com/www.$DOMAIN/" "$DOMAIN"
 sudo ln -s /etc/nginx/sites-available/"$DOMAIN" /etc/nginx/sites-enabled/
@@ -29,7 +33,7 @@ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/
 sudo openssl dhparam -out /etc/nginx/ssl/dhparam.pem 2048
 cd /etc/nginx/
 sudo mv nginx.conf nginx.conf.backup
-wget -O nginx.conf https://goo.gl/n8crcR
+wget -O nginx.conf $GETLINK_B
 sudo mkdir /var/www/"$DOMAIN"
 cd /var/www/"$DOMAIN"
 sudo su -c 'echo "<?php phpinfo(); ?>" |tee info.php'
@@ -48,7 +52,15 @@ sudo systemctl restart nginx.service
 echo "lets install php 7.0 and modules"
 sleep 2;
 sudo apt install php7.0 php7.0-fpm -y
-sudo apt-get -y install php7.0-fpm php7.0-curl php7.0-gd php7.0-imap php7.0-mcrypt php7.0-readline php7.0-common php7.0-recode php7.0-mysql php7.0-cli php7.0-curl php7.0-mbstring php7.0-bcmath php7.0-mysql php7.0-opcache php7.0-zip php7.0-xml php-memcached php-imagick php-memcache memcached graphviz php-pear php-xdebug php-msgpack  php7.0-soap
+sudo apt-get -y install \
+  php7.0-fpm php7.0-curl php7.0-gd \
+  php7.0-imap php7.0-mcrypt php7.0-readline \
+  php7.0-common php7.0-recode php7.0-mysql \
+  php7.0-cli php7.0-curl php7.0-mbstring \
+  php7.0-bcmath php7.0-mysql php7.0-opcache \
+  php7.0-zip php7.0-xml php-memcached php-imagick \
+  php-memcache memcached graphviz php-pear php-xdebug \
+  php-msgpack  php7.0-soap
 
 echo "Some php.ini tweaks"
 sleep 2;

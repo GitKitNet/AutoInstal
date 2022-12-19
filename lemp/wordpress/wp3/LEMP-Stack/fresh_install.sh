@@ -16,7 +16,7 @@ sudo apt install unzip -y
 echo "Sit back and relax :) ......"
 sleep 2;
 cd /etc/nginx/sites-available/
-wget -O "$DOMAIN" https://goo.gl/s8pdtv
+wget -O "$DOMAIN" https://raw.githubusercontent.com/bajpangosh/KLOUDBOY-LEMP-Stack/master/default
 sed -i -e "s/example.com/$DOMAIN/" "$DOMAIN"
 sed -i -e "s/www.example.com/www.$DOMAIN/" "$DOMAIN"
 sudo ln -s /etc/nginx/sites-available/"$DOMAIN" /etc/nginx/sites-enabled/
@@ -28,7 +28,7 @@ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/
 sudo openssl dhparam -out /etc/nginx/ssl/dhparam.pem 2048
 cd /etc/nginx/
 sudo mv nginx.conf nginx.conf.backup
-wget -O nginx.conf https://goo.gl/n8crcR
+wget -O nginx.conf https://raw.githubusercontent.com/bajpangosh/KLOUDBOY-LEMP-Stack/master/nginx.conf
 sudo mkdir /var/www/"$DOMAIN"
 cd /var/www/"$DOMAIN"
 sudo su -c 'echo "<?php phpinfo(); ?>" |tee info.php'
@@ -47,7 +47,13 @@ sudo systemctl restart nginx.service
 echo "lets install php 7.2 and modules"
 sleep 2;
 sudo apt install php7.2 php7.2-fpm -y
-sudo apt-get -y install php7.2-fpm php7.2-curl php7.2-gd php7.2-imap php7.2-readline php7.2-common php7.2-recode php7.2-mysql php7.2-cli php7.2-curl php7.2-mbstring php7.2-bcmath php7.2-mysql php7.2-opcache php7.2-zip php7.2-xml php-memcached php-imagick php-memcache memcached graphviz php-pear php-xdebug php-msgpack  php7.2-soap
+sudo apt-get -y install php7.2-fpm php7.2-curl \
+  php7.2-gd php7.2-imap php7.2-readline php7.2-common \
+  php7.2-recode php7.2-mysql php7.2-cli php7.2-curl \
+  php7.2-mbstring php7.2-bcmath php7.2-mysql \
+  php7.2-opcache php7.2-zip php7.2-xml php-memcached \
+  php-imagick php-memcache memcached graphviz php-pear \
+  php-xdebug php-msgpack  php7.2-soap
 
 echo "Some php.ini tweaks"
 sleep 2;
